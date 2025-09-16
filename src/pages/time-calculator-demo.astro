@@ -1,0 +1,240 @@
+---
+/**
+ * TimeCalculator Component Demo Page
+ * Demonstrates the TimeCalculator component with sample anime data
+ */
+
+import TimeCalculator from '../components/TimeCalculator.astro';
+
+// Sample anime data for testing
+const sampleAnime = {
+  id: 1,
+  title: {
+    romaji: "Attack on Titan",
+    english: "Attack on Titan",
+    native: "進撃の巨人"
+  },
+  coverImage: {
+    large: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx16498-73IhOXpJZiMF.jpg",
+    medium: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx16498-73IhOXpJZiMF.jpg"
+  },
+  episodes: 25,
+  duration: 24,
+  status: "FINISHED",
+  description: "Several hundred years ago, humans were nearly exterminated by Titans."
+};
+
+const noEpisodesAnime = {
+  id: 2,
+  title: {
+    romaji: "Unknown Anime",
+    english: "Unknown Anime"
+  },
+  episodes: null,
+  duration: null
+};
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TimeCalculator Component Demo</title>
+  </head>
+  <body>
+    <div class="container">
+      <header class="demo-header">
+        <h1>TimeCalculator Component Demo</h1>
+        <p>Testing the TimeCalculator component with different anime data scenarios</p>
+      </header>
+
+      <main class="demo-content">
+        <section class="demo-section">
+          <h2>Valid Anime Data (Attack on Titan)</h2>
+          <p>25 episodes, 24 minutes per episode</p>
+          <div class="demo-component">
+            <TimeCalculator 
+              anime={sampleAnime}
+              initialIncludeOpening={false}
+              initialIncludeEnding={false}
+            />
+          </div>
+        </section>
+
+        <section class="demo-section">
+          <h2>Valid Anime with Initial Checkboxes Checked</h2>
+          <p>Same anime but with opening and ending themes initially included</p>
+          <div class="demo-component">
+            <TimeCalculator 
+              anime={sampleAnime}
+              initialIncludeOpening={true}
+              initialIncludeEnding={true}
+            />
+          </div>
+        </section>
+
+        <section class="demo-section">
+          <h2>No Anime Data (Empty State)</h2>
+          <p>Shows the empty state when no anime is provided</p>
+          <div class="demo-component">
+            <TimeCalculator anime={null} />
+          </div>
+        </section>
+
+        <section class="demo-section">
+          <h2>Invalid Anime Data (No Episodes)</h2>
+          <p>Shows empty state when anime has no episode count</p>
+          <div class="demo-component">
+            <TimeCalculator anime={noEpisodesAnime} />
+          </div>
+        </section>
+
+        <section class="demo-section">
+          <h2>Interactive Test</h2>
+          <p>Test the real-time calculation updates by toggling the checkboxes</p>
+          <div class="demo-component">
+            <TimeCalculator 
+              anime={{
+                episodes: 12,
+                duration: 23
+              }}
+              initialIncludeOpening={false}
+              initialIncludeEnding={false}
+            />
+          </div>
+          <div class="demo-instructions">
+            <h3>Instructions:</h3>
+            <ul>
+              <li>Toggle the "Include Opening Themes" checkbox to add 1m 30s per episode</li>
+              <li>Toggle the "Include Ending Themes" checkbox to add another 1m 30s per episode</li>
+              <li>Watch the total time update in real-time</li>
+              <li>Notice the smooth animations and aquamarine theme</li>
+            </ul>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      // Add anime data to calculator elements for JavaScript initialization
+      document.addEventListener('DOMContentLoaded', () => {
+        const calculators = document.querySelectorAll('.time-calculator');
+        
+        calculators.forEach((calculator, index) => {
+          let animeData = null;
+          
+          switch(index) {
+            case 0:
+            case 1:
+              animeData = {
+                episodes: 25,
+                duration: 24
+              };
+              break;
+            case 4:
+              animeData = {
+                episodes: 12,
+                duration: 23
+              };
+              break;
+          }
+          
+          if (animeData) {
+            calculator.dataset.anime = JSON.stringify(animeData);
+          }
+        });
+
+        // Trigger DOMContentLoaded event for the TimeCalculator script
+        const event = new Event('DOMContentLoaded');
+        document.dispatchEvent(event);
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  .demo-header {
+    text-align: center;
+    margin-bottom: var(--space-2xl);
+    padding: var(--space-2xl) 0;
+    background: linear-gradient(135deg, rgba(64, 224, 208, 0.1), rgba(127, 255, 212, 0.05));
+    border-radius: var(--radius-xl);
+  }
+
+  .demo-header h1 {
+    margin-bottom: var(--space-md);
+  }
+
+  .demo-header p {
+    font-size: var(--font-size-lg);
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  .demo-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xl);
+  }
+
+  .demo-section {
+    background: var(--surface);
+    border: 2px solid var(--primary-aqua-light);
+    border-radius: var(--radius-xl);
+    padding: var(--space-xl);
+    box-shadow: var(--shadow-md);
+  }
+
+  .demo-section h2 {
+    color: var(--primary-aqua-dark);
+    margin-bottom: var(--space-md);
+  }
+
+  .demo-section p {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-lg);
+  }
+
+  .demo-component {
+    margin: var(--space-lg) 0;
+  }
+
+  .demo-instructions {
+    margin-top: var(--space-lg);
+    padding: var(--space-lg);
+    background: rgba(64, 224, 208, 0.05);
+    border: 2px solid var(--primary-aqua-light);
+    border-radius: var(--radius-lg);
+  }
+
+  .demo-instructions h3 {
+    color: var(--primary-aqua-dark);
+    margin-bottom: var(--space-md);
+  }
+
+  .demo-instructions ul {
+    margin: 0;
+    padding-left: var(--space-lg);
+  }
+
+  .demo-instructions li {
+    margin-bottom: var(--space-sm);
+    color: var(--text-secondary);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 767px) {
+    .demo-header {
+      padding: var(--space-lg) 0;
+    }
+
+    .demo-section {
+      padding: var(--space-lg);
+    }
+
+    .demo-instructions {
+      padding: var(--space-md);
+    }
+  }
+</style>

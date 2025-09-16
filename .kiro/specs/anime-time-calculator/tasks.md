@@ -82,7 +82,12 @@
   - Implement automatic recalculation on data changes
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5_
 
-- [ ] 8. Create TimeCalculator component with OP/ED controls
+- [x] 8. Create TimeCalculator component with OP/ED controls
+
+
+
+
+
   - Build checkbox controls for opening and ending inclusion
   - Implement real-time calculation updates on checkbox changes
   - Add smooth toggle animations with aquamarine accents
