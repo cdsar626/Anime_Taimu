@@ -70,7 +70,12 @@
   - Create responsive layout for episode details
   - _Requirements: 2.3, 2.4, 2.5_
 
-- [ ] 7. Implement time calculation engine
+- [x] 7. Implement time calculation engine
+
+
+
+
+
   - Create core time calculation logic with hours:minutes formatting
   - Handle edge cases for episodes under 60 minutes total
   - Write comprehensive unit tests for calculation accuracy
