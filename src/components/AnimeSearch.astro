@@ -1,0 +1,283 @@
+---
+// AnimeSearch Component
+// Handles user input for anime title search with real-time debounced API calls
+---
+
+<div class="anime-search">
+  <div class="search-container">
+    <label for="anime-search-input" class="search-label">
+      Search for an anime
+    </label>
+    <div class="search-input-wrapper">
+      <input
+        type="text"
+        id="anime-search-input"
+        class="search-input input focus-ring"
+        placeholder="Enter anime title (e.g., Attack on Titan, Naruto)..."
+        autocomplete="off"
+        spellcheck="false"
+        aria-describedby="search-status search-error"
+      />
+      <div class="search-icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+      </div>
+      <button 
+        type="button" 
+        class="clear-button" 
+        aria-label="Clear search"
+        style="display: none;"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="search-status" id="search-status" style="display: none;" aria-live="polite">
+    <div class="loading-indicator">
+      <div class="loading-spinner"></div>
+      <span>Searching anime...</span>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div class="search-error" id="search-error" style="display: none;" role="alert" aria-live="assertive">
+    <div class="error-content">
+      <svg class="error-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="15" y1="9" x2="9" y2="15"></line>
+        <line x1="9" y1="9" x2="15" y2="15"></line>
+      </svg>
+      <span class="error-message"></span>
+      <button type="button" class="retry-button btn btn-secondary">
+        Try Again
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .anime-search {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .search-container {
+    margin-bottom: var(--space-lg);
+  }
+
+  .search-label {
+    display: block;
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-sm);
+  }
+
+  .search-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .search-input {
+    padding-left: 3rem;
+    padding-right: 3rem;
+    font-size: var(--font-size-lg);
+    height: 3.5rem;
+    border: 2px solid var(--primary-aqua-light);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    transition: all var(--transition-fast);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .search-input:focus {
+    border-color: var(--primary-aqua);
+    box-shadow: 0 0 0 3px var(--shadow), var(--shadow-md);
+    transform: translateY(-1px);
+  }
+
+  .search-input:hover:not(:focus) {
+    border-color: var(--primary-aqua);
+    box-shadow: var(--shadow-md);
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 1rem;
+    color: var(--primary-aqua);
+    pointer-events: none;
+    transition: color var(--transition-fast);
+  }
+
+  .search-input:focus + .search-icon {
+    color: var(--primary-aqua-dark);
+  }
+
+  .clear-button {
+    position: absolute;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .clear-button:hover {
+    color: var(--error);
+    background: rgba(255, 107, 107, 0.1);
+  }
+
+  .clear-button:focus {
+    outline: 2px solid var(--primary-aqua);
+    outline-offset: 2px;
+  }
+
+  /* Loading State Styles */
+  .search-status {
+    margin-top: var(--space-md);
+  }
+
+  .loading-indicator {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    background: rgba(64, 224, 208, 0.05);
+    border: 1px solid var(--primary-aqua-light);
+    border-radius: var(--radius-md);
+    color: var(--primary-aqua-dark);
+    font-weight: 500;
+  }
+
+  .loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--primary-aqua-light);
+    border-top: 2px solid var(--primary-aqua);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  /* Error State Styles */
+  .search-error {
+    margin-top: var(--space-md);
+  }
+
+  .error-content {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    background: rgba(255, 107, 107, 0.05);
+    border: 1px solid rgba(255, 107, 107, 0.2);
+    border-radius: var(--radius-md);
+    color: var(--error);
+  }
+
+  .error-icon {
+    flex-shrink: 0;
+  }
+
+  .error-message {
+    flex: 1;
+    font-weight: 500;
+  }
+
+  .retry-button {
+    flex-shrink: 0;
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--font-size-sm);
+    border-color: var(--error);
+    color: var(--error);
+  }
+
+  .retry-button:hover {
+    background: var(--error);
+    color: white;
+  }
+
+  /* Animations */
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .animate-fade-in {
+    animation: fadeIn var(--transition-normal) ease-in-out;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 767px) {
+    .search-input {
+      font-size: var(--font-size-base);
+      height: 3rem;
+      padding-left: 2.5rem;
+      padding-right: 2.5rem;
+    }
+
+    .search-icon {
+      left: 0.75rem;
+    }
+
+    .clear-button {
+      right: 0.75rem;
+    }
+
+    .error-content {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-md);
+    }
+
+    .retry-button {
+      align-self: stretch;
+    }
+  }
+
+  /* High Contrast Mode */
+  @media (prefers-contrast: high) {
+    .search-input {
+      border-width: 3px;
+    }
+
+    .loading-indicator,
+    .error-content {
+      border-width: 2px;
+    }
+  }
+
+  /* Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    .loading-spinner {
+      animation: none;
+    }
+
+    .search-input {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  import { AnimeSearchComponent } from './AnimeSearch.class.js';
+
+  // Initialize component when DOM is ready
+  document.addEventListener('DOMContentLoaded', () => {
+    window.animeSearchComponent = new AnimeSearchComponent();
+  });
+</script>

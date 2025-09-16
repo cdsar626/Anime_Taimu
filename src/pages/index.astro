@@ -1,6 +1,7 @@
 ---
-// Import global styles
+// Import global styles and components
 import '../styles/global.css';
+import AnimeSearch from '../components/AnimeSearch.astro';
 ---
 
 <html lang="en">
@@ -20,11 +21,39 @@ import '../styles/global.css';
 			</header>
 			
 			<main class="grid gap-xl">
-				<!-- Components will be added in future tasks -->
-				<div class="card animate-scale-in">
-					<p>Search for an anime to get started!</p>
+				<!-- AnimeSearch Component -->
+				<section class="animate-scale-in">
+					<AnimeSearch />
+				</section>
+				
+				<!-- Placeholder for future components -->
+				<div class="card animate-scale-in" id="anime-results" style="display: none;">
+					<p>Anime information will appear here...</p>
 				</div>
 			</main>
+			
+			<script>
+				// Listen for search results from the AnimeSearch component
+				document.addEventListener('animeSearchResult', (event) => {
+					const { data, error, searchTerm } = event.detail;
+					const resultsDiv = document.getElementById('anime-results');
+					
+					if (data) {
+						resultsDiv.innerHTML = `
+							<h3>Found: ${data.title.romaji}</h3>
+							<p>Episodes: ${data.episodes || 'Unknown'}</p>
+							<p>Duration per episode: ${data.duration || 24} minutes</p>
+							${data.coverImage.large ? `<img src="${data.coverImage.large}" alt="${data.title.romaji}" style="max-width: 200px; border-radius: 8px;">` : ''}
+						`;
+						resultsDiv.style.display = 'block';
+					} else if (error) {
+						resultsDiv.innerHTML = `<p class="error-message">Error: ${error}</p>`;
+						resultsDiv.style.display = 'block';
+					} else {
+						resultsDiv.style.display = 'none';
+					}
+				});
+			</script>
 		</div>
 	</body>
 </html>
