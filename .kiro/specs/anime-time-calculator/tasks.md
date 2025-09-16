@@ -58,7 +58,12 @@
   - Add smooth fade-in animations for content loading
   - _Requirements: 2.1, 2.2, 5.2, 5.5_
 
-- [ ] 6. Build episode information display
+- [x] 6. Build episode information display
+
+
+
+
+
   - Show episode count and duration per episode
   - Implement default values when API data is missing
   - Add proper formatting for episode information

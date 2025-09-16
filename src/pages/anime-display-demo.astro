@@ -38,6 +38,38 @@ const mockAnimeNoEnglish = {
   duration: 23,
   status: 'FINISHED'
 };
+
+const mockAnimeNoDuration = {
+  id: 3,
+  title: {
+    romaji: 'One Piece',
+    english: 'One Piece',
+    native: 'ワンピース'
+  },
+  coverImage: {
+    large: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx21-YCDoj1EkAxFn.jpg',
+    medium: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx21-YCDoj1EkAxFn.jpg'
+  },
+  episodes: 1000,
+  duration: null, // No duration available
+  status: 'RELEASING'
+};
+
+const mockAnimeNoEpisodes = {
+  id: 4,
+  title: {
+    romaji: 'Upcoming Anime',
+    english: 'Upcoming Anime',
+    native: '未来のアニメ'
+  },
+  coverImage: {
+    large: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/default.jpg',
+    medium: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/default.jpg'
+  },
+  episodes: null, // No episode count available
+  duration: null, // No duration available
+  status: 'NOT_YET_RELEASED'
+};
 ---
 
 <!DOCTYPE html>
@@ -70,6 +102,16 @@ const mockAnimeNoEnglish = {
       <section class="demo-section">
         <h2>Error State</h2>
         <AnimeDisplay error="No anime found for 'nonexistent title'. Try a different search term." />
+      </section>
+
+      <section class="demo-section">
+        <h2>Missing Duration - Shows Default (24 min)</h2>
+        <AnimeDisplay anime={mockAnimeNoDuration} />
+      </section>
+
+      <section class="demo-section">
+        <h2>Missing Episodes and Duration - Shows Defaults</h2>
+        <AnimeDisplay anime={mockAnimeNoEpisodes} />
       </section>
 
       <section class="demo-section">

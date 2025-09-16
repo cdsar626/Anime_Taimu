@@ -231,42 +231,116 @@ describe('AnimeDisplay Component', () => {
       expect(subtitleElement.textContent.trim()).toBe(mockAnimeData.title.romaji);
     });
 
-    it('should display episode count correctly', () => {
+    it('should display episode count correctly in episode info section', () => {
       const container = document.getElementById('test-container');
       container.innerHTML = `
         <div class="anime-display">
           <div class="anime-display__content">
             <div class="anime-display__info">
-              <div class="anime-display__meta">
-                <span class="anime-display__episodes">${mockAnimeData.episodes} episodes</span>
+              <div class="anime-display__episode-info">
+                <div class="anime-display__episode-count">
+                  <span class="anime-display__label">Episodes:</span>
+                  <span class="anime-display__value">${mockAnimeData.episodes}</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       `;
 
-      const episodesElement = container.querySelector('.anime-display__episodes');
-      expect(episodesElement).toBeTruthy();
-      expect(episodesElement.textContent).toBe(`${mockAnimeData.episodes} episodes`);
+      const episodeCountElement = container.querySelector('.anime-display__episode-count .anime-display__value');
+      expect(episodeCountElement).toBeTruthy();
+      expect(episodeCountElement.textContent).toBe(mockAnimeData.episodes.toString());
     });
 
-    it('should display episode duration correctly', () => {
+    it('should display "Unknown" when episode count is not available', () => {
       const container = document.getElementById('test-container');
       container.innerHTML = `
         <div class="anime-display">
           <div class="anime-display__content">
             <div class="anime-display__info">
-              <div class="anime-display__meta">
-                <span class="anime-display__duration">${mockAnimeData.duration} min/ep</span>
+              <div class="anime-display__episode-info">
+                <div class="anime-display__episode-count">
+                  <span class="anime-display__label">Episodes:</span>
+                  <span class="anime-display__value">Unknown</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       `;
 
-      const durationElement = container.querySelector('.anime-display__duration');
+      const episodeCountElement = container.querySelector('.anime-display__episode-count .anime-display__value');
+      expect(episodeCountElement.textContent).toBe('Unknown');
+    });
+
+    it('should display episode duration correctly in episode info section', () => {
+      const container = document.getElementById('test-container');
+      container.innerHTML = `
+        <div class="anime-display">
+          <div class="anime-display__content">
+            <div class="anime-display__info">
+              <div class="anime-display__episode-info">
+                <div class="anime-display__episode-duration">
+                  <span class="anime-display__label">Duration:</span>
+                  <span class="anime-display__value">${mockAnimeData.duration} min/ep</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const durationElement = container.querySelector('.anime-display__episode-duration .anime-display__value');
       expect(durationElement).toBeTruthy();
       expect(durationElement.textContent).toBe(`${mockAnimeData.duration} min/ep`);
+    });
+
+    it('should use default duration of 24 minutes when duration is not available', () => {
+      const container = document.getElementById('test-container');
+      container.innerHTML = `
+        <div class="anime-display">
+          <div class="anime-display__content">
+            <div class="anime-display__info">
+              <div class="anime-display__episode-info">
+                <div class="anime-display__episode-duration">
+                  <span class="anime-display__label">Duration:</span>
+                  <span class="anime-display__value">24 min/ep</span>
+                  <span class="anime-display__default-note">(default)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const durationElement = container.querySelector('.anime-display__episode-duration .anime-display__value');
+      const defaultNote = container.querySelector('.anime-display__default-note');
+      
+      expect(durationElement.textContent).toBe('24 min/ep');
+      expect(defaultNote).toBeTruthy();
+      expect(defaultNote.textContent).toBe('(default)');
+    });
+
+    it('should not show default note when duration is available from API', () => {
+      const container = document.getElementById('test-container');
+      container.innerHTML = `
+        <div class="anime-display">
+          <div class="anime-display__content">
+            <div class="anime-display__info">
+              <div class="anime-display__episode-info">
+                <div class="anime-display__episode-duration">
+                  <span class="anime-display__label">Duration:</span>
+                  <span class="anime-display__value">${mockAnimeData.duration} min/ep</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const defaultNote = container.querySelector('.anime-display__default-note');
+      expect(defaultNote).toBeFalsy();
     });
 
     it('should display status with correct styling', () => {

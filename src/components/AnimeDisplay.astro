@@ -77,19 +77,26 @@ const { anime, isLoading = false, error = null } = Astro.props;
           </p>
         )}
         
+        <div class="anime-display__episode-info">
+          <div class="anime-display__episode-count">
+            <span class="anime-display__label">Episodes:</span>
+            <span class="anime-display__value">
+              {anime.episodes || 'Unknown'}
+            </span>
+          </div>
+          
+          <div class="anime-display__episode-duration">
+            <span class="anime-display__label">Duration:</span>
+            <span class="anime-display__value">
+              {anime.duration || 24} min/ep
+            </span>
+            {!anime.duration && (
+              <span class="anime-display__default-note">(default)</span>
+            )}
+          </div>
+        </div>
+        
         <div class="anime-display__meta">
-          {anime.episodes && (
-            <span class="anime-display__episodes">
-              {anime.episodes} episode{anime.episodes !== 1 ? 's' : ''}
-            </span>
-          )}
-          
-          {anime.duration && (
-            <span class="anime-display__duration">
-              {anime.duration} min/ep
-            </span>
-          )}
-          
           {anime.status && (
             <span class="anime-display__status" data-status={anime.status.toLowerCase()}>
               {anime.status.replace('_', ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase())}
@@ -249,6 +256,47 @@ const { anime, isLoading = false, error = null } = Astro.props;
     font-style: italic;
   }
 
+  .anime-display__episode-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+    margin: var(--space-lg) 0;
+    padding: var(--space-md);
+    background: rgba(64, 224, 208, 0.05);
+    border: 2px solid var(--primary-aqua-light);
+    border-radius: var(--radius-lg);
+  }
+
+  .anime-display__episode-count,
+  .anime-display__episode-duration {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-xs);
+  }
+
+  .anime-display__label {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .anime-display__value {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--primary-aqua-dark);
+  }
+
+  .anime-display__default-note {
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    font-style: italic;
+    opacity: 0.8;
+  }
+
   .anime-display__meta {
     display: flex;
     flex-wrap: wrap;
@@ -257,8 +305,6 @@ const { anime, isLoading = false, error = null } = Astro.props;
     margin-top: var(--space-md);
   }
 
-  .anime-display__episodes,
-  .anime-display__duration,
   .anime-display__status {
     padding: var(--space-xs) var(--space-sm);
     background: var(--surface);
@@ -304,13 +350,24 @@ const { anime, isLoading = false, error = null } = Astro.props;
       font-size: var(--font-size-xl);
     }
 
+    .anime-display__episode-info {
+      grid-template-columns: 1fr;
+      gap: var(--space-sm);
+      padding: var(--space-sm);
+    }
+
+    .anime-display__episode-count,
+    .anime-display__episode-duration {
+      flex-direction: row;
+      justify-content: space-between;
+      text-align: left;
+    }
+
     .anime-display__meta {
       flex-direction: column;
       align-items: center;
     }
 
-    .anime-display__episodes,
-    .anime-display__duration,
     .anime-display__status {
       width: fit-content;
     }
@@ -339,6 +396,15 @@ const { anime, isLoading = false, error = null } = Astro.props;
     .anime-display__info {
       flex: 1;
       max-width: none;
+    }
+
+    .anime-display__episode-info {
+      text-align: center;
+    }
+
+    .anime-display__episode-count,
+    .anime-display__episode-duration {
+      align-items: center;
     }
 
     .anime-display__meta {
