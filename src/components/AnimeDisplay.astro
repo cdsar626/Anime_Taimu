@@ -1,0 +1,434 @@
+---
+/**
+ * AnimeDisplay Component
+ * Displays anime cover image and title with loading states and animations
+ * Requirements: 2.1, 2.2, 5.2, 5.5
+ */
+
+export interface Props {
+  anime?: {
+    id: number;
+    title: {
+      romaji: string;
+      english?: string;
+      native: string;
+    };
+    coverImage: {
+      large: string;
+      medium: string;
+    };
+    episodes: number | null;
+    duration: number | null;
+    status: string;
+    description?: string;
+  } | null;
+  isLoading?: boolean;
+  error?: string | null;
+}
+
+const { anime, isLoading = false, error = null } = Astro.props;
+---
+
+<div class="anime-display">
+  {isLoading && (
+    <div class="anime-display__loading">
+      <div class="anime-display__cover-skeleton loading-skeleton"></div>
+      <div class="anime-display__title-skeleton">
+        <div class="loading-skeleton anime-display__title-line"></div>
+        <div class="loading-skeleton anime-display__subtitle-line"></div>
+      </div>
+    </div>
+  )}
+
+  {error && !isLoading && (
+    <div class="anime-display__error">
+      <div class="anime-display__error-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="currentColor"/>
+        </svg>
+      </div>
+      <p class="anime-display__error-message">{error}</p>
+    </div>
+  )}
+
+  {anime && !isLoading && !error && (
+    <div class="anime-display__content animate-fade-in">
+      <div class="anime-display__cover-container">
+        <img
+          class="anime-display__cover"
+          src={anime.coverImage.large || anime.coverImage.medium}
+          alt={`Cover image for ${anime.title.english || anime.title.romaji}`}
+          loading="lazy"
+          decoding="async"
+          onload="this.classList.add('loaded')"
+          onerror="this.classList.add('error'); this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjI4MCIgdmlld0JveD0iMCAwIDIwMCAyODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjgwIiBmaWxsPSIjRjBGRkZGIi8+CjxwYXRoIGQ9Ik0xMDAgMTQwQzExMC40NTcgMTQwIDExOSAxMzEuNDU3IDExOSAxMjFDMTE5IDExMC41NDMgMTEwLjQ1NyAxMDIgMTAwIDEwMkM4OS41NDMgMTAyIDgxIDExMC41NDMgODEgMTIxQzgxIDEzMS40NTcgODkuNTQzIDE0MCAxMDAgMTQwWiIgZmlsbD0iIzQwRTBEMCIvPgo8cGF0aCBkPSJNMTAwIDE2MEMxMDQuNDE4IDE2MCAxMDggMTU2LjQxOCAxMDggMTUyQzEwOCAxNDcuNTgyIDEwNC40MTggMTQ0IDEwMCAxNDRDOTUuNTgyIDE0NCA5MiAxNDcuNTgyIDkyIDE1MkM5MiAxNTYuNDE4IDk1LjU4MiAxNjAgMTAwIDE2MFoiIGZpbGw9IiM0MEUwRDAiLz4KPHN2Zz4K'"
+        />
+        <div class="anime-display__cover-overlay"></div>
+      </div>
+      
+      <div class="anime-display__info">
+        <h2 class="anime-display__title">
+          {anime.title.english || anime.title.romaji}
+        </h2>
+        
+        {anime.title.english && anime.title.romaji !== anime.title.english && (
+          <p class="anime-display__subtitle">
+            {anime.title.romaji}
+          </p>
+        )}
+        
+        <div class="anime-display__meta">
+          {anime.episodes && (
+            <span class="anime-display__episodes">
+              {anime.episodes} episode{anime.episodes !== 1 ? 's' : ''}
+            </span>
+          )}
+          
+          {anime.duration && (
+            <span class="anime-display__duration">
+              {anime.duration} min/ep
+            </span>
+          )}
+          
+          {anime.status && (
+            <span class="anime-display__status" data-status={anime.status.toLowerCase()}>
+              {anime.status.replace('_', ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase())}
+            </span>
+          )}
+        </div>
+      </div>
+    </div>
+  )}
+</div>
+
+<style>
+  .anime-display {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* Loading States */
+  .anime-display__loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-lg);
+  }
+
+  .anime-display__cover-skeleton {
+    width: 200px;
+    height: 280px;
+    border-radius: var(--radius-lg);
+  }
+
+  .anime-display__title-skeleton {
+    width: 100%;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .anime-display__title-line {
+    height: 2rem;
+    width: 100%;
+    border-radius: var(--radius-sm);
+  }
+
+  .anime-display__subtitle-line {
+    height: 1.5rem;
+    width: 75%;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Error States */
+  .anime-display__error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-xl);
+    text-align: center;
+  }
+
+  .anime-display__error-icon {
+    color: var(--text-secondary);
+    opacity: 0.6;
+  }
+
+  .anime-display__error-message {
+    color: var(--text-secondary);
+    font-size: var(--font-size-lg);
+    margin: 0;
+  }
+
+  /* Content Display */
+  .anime-display__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-lg);
+    text-align: center;
+  }
+
+  .anime-display__cover-container {
+    position: relative;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    transition: all var(--transition-normal);
+  }
+
+  .anime-display__cover-container:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .anime-display__cover {
+    width: 200px;
+    height: 280px;
+    object-fit: cover;
+    display: block;
+    opacity: 0;
+    transition: opacity var(--transition-slow);
+    background: linear-gradient(135deg, var(--primary-aqua-light), var(--primary-aqua));
+  }
+
+  .anime-display__cover.loaded {
+    opacity: 1;
+    animation: fadeIn var(--transition-slow) ease-out;
+  }
+
+  .anime-display__cover.error {
+    opacity: 1;
+    background: var(--background);
+  }
+
+  .anime-display__cover-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      transparent 60%,
+      rgba(64, 224, 208, 0.1) 100%
+    );
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+  }
+
+  .anime-display__cover-container:hover .anime-display__cover-overlay {
+    opacity: 1;
+  }
+
+  .anime-display__info {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .anime-display__title {
+    font-size: var(--font-size-2xl);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 var(--space-sm) 0;
+    line-height: 1.2;
+    background: linear-gradient(135deg, var(--primary-aqua), var(--primary-aqua-dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .anime-display__subtitle {
+    font-size: var(--font-size-lg);
+    color: var(--text-secondary);
+    margin: 0 0 var(--space-md) 0;
+    font-style: italic;
+  }
+
+  .anime-display__meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-md);
+    margin-top: var(--space-md);
+  }
+
+  .anime-display__episodes,
+  .anime-display__duration,
+  .anime-display__status {
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--surface);
+    border: 2px solid var(--primary-aqua-light);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--primary-aqua-dark);
+    transition: all var(--transition-fast);
+  }
+
+  .anime-display__status[data-status="finished"] {
+    background: rgba(81, 207, 102, 0.1);
+    border-color: var(--success);
+    color: var(--success);
+  }
+
+  .anime-display__status[data-status="releasing"] {
+    background: rgba(64, 224, 208, 0.1);
+    border-color: var(--primary-aqua);
+    color: var(--primary-aqua-dark);
+  }
+
+  .anime-display__status[data-status="not yet released"] {
+    background: rgba(112, 128, 144, 0.1);
+    border-color: var(--text-secondary);
+    color: var(--text-secondary);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 767px) {
+    .anime-display__cover {
+      width: 160px;
+      height: 224px;
+    }
+
+    .anime-display__cover-skeleton {
+      width: 160px;
+      height: 224px;
+    }
+
+    .anime-display__title {
+      font-size: var(--font-size-xl);
+    }
+
+    .anime-display__meta {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .anime-display__episodes,
+    .anime-display__duration,
+    .anime-display__status {
+      width: fit-content;
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .anime-display__cover {
+      width: 180px;
+      height: 252px;
+    }
+
+    .anime-display__cover-skeleton {
+      width: 180px;
+      height: 252px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .anime-display__content {
+      flex-direction: row;
+      text-align: left;
+      align-items: flex-start;
+      gap: var(--space-2xl);
+    }
+
+    .anime-display__info {
+      flex: 1;
+      max-width: none;
+    }
+
+    .anime-display__meta {
+      justify-content: flex-start;
+    }
+
+    .anime-display__cover {
+      width: 240px;
+      height: 336px;
+    }
+
+    .anime-display__cover-skeleton {
+      width: 240px;
+      height: 336px;
+    }
+  }
+
+  /* Accessibility Improvements */
+  @media (prefers-reduced-motion: reduce) {
+    .anime-display__cover,
+    .anime-display__cover-container,
+    .anime-display__cover-overlay {
+      transition: none;
+    }
+
+    .animate-fade-in {
+      animation: none;
+    }
+  }
+
+  /* High Contrast Mode */
+  @media (prefers-contrast: high) {
+    .anime-display__title {
+      -webkit-text-fill-color: var(--text-primary);
+      background: none;
+    }
+
+    .anime-display__episodes,
+    .anime-display__duration,
+    .anime-display__status {
+      border-width: 3px;
+    }
+  }
+
+  /* Print Styles */
+  @media print {
+    .anime-display__cover-overlay,
+    .anime-display__cover-container:hover {
+      display: none;
+    }
+
+    .anime-display__cover {
+      opacity: 1 !important;
+    }
+  }
+</style>
+
+<script>
+  // Enhanced lazy loading with intersection observer for better performance
+  if ('IntersectionObserver' in window) {
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const img = entry.target as HTMLImageElement;
+          if (img.dataset.src) {
+            img.src = img.dataset.src;
+            img.removeAttribute('data-src');
+            observer.unobserve(img);
+          }
+        }
+      });
+    });
+
+    // Observe all anime cover images
+    document.querySelectorAll('.anime-display__cover[data-src]').forEach(img => {
+      imageObserver.observe(img);
+    });
+  }
+
+  // Preload next likely images for better UX
+  function preloadImage(src: string) {
+    if (src && src !== 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjI4MCIgdmlld0JveD0iMCAwIDIwMCAyODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjgwIiBmaWxsPSIjRjBGRkZGIi8+CjxwYXRoIGQ9Ik0xMDAgMTQwQzExMC40NTcgMTQwIDExOSAxMzEuNDU3IDExOSAxMjFDMTE5IDExMC41NDMgMTEwLjQ1NyAxMDIgMTAwIDEwMkM4OS41NDMgMTAyIDgxIDExMC41NDMgODEgMTIxQzgxIDEzMS40NTcgODkuNTQzIDE0MCAxMDAgMTQwWiIgZmlsbD0iIzQwRTBEMCIvPgo8cGF0aCBkPSJNMTAwIDE2MEMxMDQuNDE4IDE2MCAxMDggMTU2LjQxOCAxMDggMTUyQzEwOCAxNDcuNTgyIDEwNC40MTggMTQ0IDEwMCAxNDRDOTUuNTgyIDE0NCA5MiAxNDcuNTgyIDkyIDE1MkM5MiAxNTYuNDE4IDk1LjU4MiAxNjAgMTAwIDE2MFoiIGZpbGw9IiM0MEUwRDAiLz4KPHN2Zz4K') {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'image';
+      link.href = src;
+      document.head.appendChild(link);
+    }
+  }
+
+  // Export preload function for use by parent components
+  (window as any).preloadAnimeImage = preloadImage;
+</script>

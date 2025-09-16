@@ -1,0 +1,102 @@
+---
+/**
+ * Demo page for AnimeDisplay component
+ * Used for testing and visual verification
+ */
+import AnimeDisplay from '../components/AnimeDisplay.astro';
+
+// Mock data for testing different states
+const mockAnime = {
+  id: 1,
+  title: {
+    romaji: 'Shingeki no Kyojin',
+    english: 'Attack on Titan',
+    native: '進撃の巨人'
+  },
+  coverImage: {
+    large: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx16498-73IhOXpJZiMF.jpg',
+    medium: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx16498-73IhOXpJZiMF.jpg'
+  },
+  episodes: 25,
+  duration: 24,
+  status: 'FINISHED',
+  description: 'Several hundred years ago, humans were nearly exterminated by Titans.'
+};
+
+const mockAnimeNoEnglish = {
+  id: 2,
+  title: {
+    romaji: 'Kimetsu no Yaiba',
+    english: null,
+    native: '鬼滅の刃'
+  },
+  coverImage: {
+    large: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx101922-PEn1CTc93blC.jpg',
+    medium: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx101922-PEn1CTc93blC.jpg'
+  },
+  episodes: 26,
+  duration: 23,
+  status: 'FINISHED'
+};
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AnimeDisplay Component Demo</title>
+    <link rel="stylesheet" href="/src/styles/global.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>AnimeDisplay Component Demo</h1>
+      
+      <section class="demo-section">
+        <h2>Normal State - With English Title</h2>
+        <AnimeDisplay anime={mockAnime} />
+      </section>
+
+      <section class="demo-section">
+        <h2>Normal State - Romaji Only</h2>
+        <AnimeDisplay anime={mockAnimeNoEnglish} />
+      </section>
+
+      <section class="demo-section">
+        <h2>Loading State</h2>
+        <AnimeDisplay isLoading={true} />
+      </section>
+
+      <section class="demo-section">
+        <h2>Error State</h2>
+        <AnimeDisplay error="No anime found for 'nonexistent title'. Try a different search term." />
+      </section>
+
+      <section class="demo-section">
+        <h2>No Data State</h2>
+        <AnimeDisplay anime={null} />
+      </section>
+    </div>
+
+    <style>
+      .demo-section {
+        margin: var(--space-2xl) 0;
+        padding: var(--space-xl);
+        background: var(--surface);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-md);
+      }
+
+      .demo-section h2 {
+        margin-bottom: var(--space-lg);
+        color: var(--primary-aqua-dark);
+        border-bottom: 2px solid var(--primary-aqua-light);
+        padding-bottom: var(--space-sm);
+      }
+
+      body {
+        padding: var(--space-lg) 0;
+      }
+    </style>
+  </body>
+</html>
