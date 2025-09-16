@@ -497,4 +497,111 @@ const { anime, isLoading = false, error = null } = Astro.props;
 
   // Export preload function for use by parent components
   (window as any).preloadAnimeImage = preloadImage;
+
+  // Function to update component from parent
+  function updateAnimeDisplay(anime: any, isLoading: boolean, error: string | null) {
+    const animeDisplayElement = document.querySelector('.anime-display');
+    if (!animeDisplayElement) return;
+
+    // Update the component's data attributes
+    if (anime) {
+      animeDisplayElement.setAttribute('data-anime', JSON.stringify(anime));
+    } else {
+      animeDisplayElement.removeAttribute('data-anime');
+    }
+    animeDisplayElement.setAttribute('data-loading', isLoading.toString());
+    animeDisplayElement.setAttribute('data-error', error || '');
+
+    // Re-render the component content
+    renderAnimeDisplay(animeDisplayElement, anime, isLoading, error);
+  }
+
+  function renderAnimeDisplay(container: Element, anime: any, isLoading: boolean, error: string | null) {
+    let content = '';
+
+    if (isLoading) {
+      content = `
+        <div class="anime-display__loading">
+          <div class="anime-display__cover-skeleton loading-skeleton"></div>
+          <div class="anime-display__title-skeleton">
+            <div class="loading-skeleton anime-display__title-line"></div>
+            <div class="loading-skeleton anime-display__subtitle-line"></div>
+          </div>
+        </div>
+      `;
+    } else if (error && !isLoading) {
+      content = `
+        <div class="anime-display__error">
+          <div class="anime-display__error-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="currentColor"/>
+            </svg>
+          </div>
+          <p class="anime-display__error-message">${error}</p>
+        </div>
+      `;
+    } else if (anime && !isLoading && !error) {
+      const englishTitle = anime.title.english || anime.title.romaji;
+      const showSubtitle = anime.title.english && anime.title.romaji !== anime.title.english;
+      
+      content = `
+        <div class="anime-display__content animate-fade-in">
+          <div class="anime-display__cover-container">
+            <img
+              class="anime-display__cover"
+              src="${anime.coverImage.large || anime.coverImage.medium}"
+              alt="Cover image for ${englishTitle}"
+              loading="lazy"
+              decoding="async"
+              onload="this.classList.add('loaded')"
+              onerror="this.classList.add('error'); this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjI4MCIgdmlld0JveD0iMCAwIDIwMCAyODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjgwIiBmaWxsPSIjRjBGRkZGIi8+CjxwYXRoIGQ9Ik0xMDAgMTQwQzExMC40NTcgMTQwIDExOSAxMzEuNDU3IDExOSAxMjFDMTE5IDExMC41NDMgMTEwLjQ1NyAxMDIgMTAwIDEwMkM4OS41NDMgMTAyIDgxIDExMC41NDMgODEgMTIxQzgxIDEzMS40NTcgODkuNTQzIDE0MCAxMDAgMTQwWiIgZmlsbD0iIzQwRTBEMCIvPgo8cGF0aCBkPSJNMTAwIDE2MEMxMDQuNDE4IDE2MCAxMDggMTU2LjQxOCAxMDggMTUyQzEwOCAxNDcuNTgyIDEwNC40MTggMTQ0IDEwMCAxNDRDOTUuNTgyIDE0NCA5MiAxNDcuNTgyIDkyIDE1MkM5MiAxNTYuNDE4IDk1LjU4MiAxNjAgMTAwIDE2MFoiIGZpbGw9IiM0MEUwRDAiLz4KPHN2Zz4K'"
+            />
+            <div class="anime-display__cover-overlay"></div>
+          </div>
+          
+          <div class="anime-display__info">
+            <h2 class="anime-display__title">
+              ${englishTitle}
+            </h2>
+            
+            ${showSubtitle ? `
+              <p class="anime-display__subtitle">
+                ${anime.title.romaji}
+              </p>
+            ` : ''}
+            
+            <div class="anime-display__episode-info">
+              <div class="anime-display__episode-count">
+                <span class="anime-display__label">Episodes:</span>
+                <span class="anime-display__value">
+                  ${anime.episodes || 'Unknown'}
+                </span>
+              </div>
+              
+              <div class="anime-display__episode-duration">
+                <span class="anime-display__label">Duration:</span>
+                <span class="anime-display__value">
+                  ${anime.duration || 24} min/ep
+                </span>
+                ${!anime.duration ? '<span class="anime-display__default-note">(default)</span>' : ''}
+              </div>
+            </div>
+            
+            <div class="anime-display__meta">
+              ${anime.status ? `
+                <span class="anime-display__status" data-status="${anime.status.toLowerCase()}">
+                  ${anime.status.replace('_', ' ').toLowerCase().replace(/\b\w/g, (l: string) => l.toUpperCase())}
+                </span>
+              ` : ''}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    container.innerHTML = content;
+  }
+
+  // Export update function for use by parent components
+  (window as any).updateAnimeDisplay = updateAnimeDisplay;
 </script>

@@ -154,6 +154,9 @@ export class AnimeSearchComponent {
       this.searchStatus.style.display = 'block';
       this.searchStatus.classList.add('animate-fade-in');
     }
+    
+    // Dispatch loading event
+    this.dispatchLoadingEvent(true);
   }
 
   hideLoading() {
@@ -162,6 +165,9 @@ export class AnimeSearchComponent {
       this.searchStatus.style.display = 'none';
       this.searchStatus.classList.remove('animate-fade-in');
     }
+    
+    // Dispatch loading event
+    this.dispatchLoadingEvent(false);
   }
 
   showError(message) {
@@ -194,6 +200,19 @@ export class AnimeSearchComponent {
       detail: {
         data: animeData,
         error: error,
+        searchTerm: this.currentSearchTerm
+      },
+      bubbles: true
+    });
+    
+    this.searchInput.dispatchEvent(event);
+  }
+
+  dispatchLoadingEvent(loading) {
+    // Dispatch loading event for parent components
+    const event = new CustomEvent('animeSearchLoading', {
+      detail: {
+        loading: loading,
         searchTerm: this.currentSearchTerm
       },
       bubbles: true

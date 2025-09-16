@@ -1,7 +1,15 @@
 ---
+/**
+ * Main Index Page - Anime Time Calculator
+ * Integrates all components with responsive layout and state management
+ * Requirements: 5.4, 2.1
+ */
+
 // Import global styles and components
 import '../styles/global.css';
 import AnimeSearch from '../components/AnimeSearch.astro';
+import AnimeDisplay from '../components/AnimeDisplay.astro';
+import TimeCalculator from '../components/TimeCalculator.astro';
 ---
 
 <html lang="en">
@@ -11,49 +19,495 @@ import AnimeSearch from '../components/AnimeSearch.astro';
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Anime Time Calculator</title>
-		<meta name="description" content="Calculate the total time needed to watch your favorite anime series" />
+		<meta name="description" content="Calculate the total time needed to watch your favorite anime series with opening and ending themes" />
+		
+		<!-- Open Graph Meta Tags -->
+		<meta property="og:title" content="Anime Time Calculator" />
+		<meta property="og:description" content="Calculate the total time needed to watch your favorite anime series" />
+		<meta property="og:type" content="website" />
+		
+		<!-- Preload critical resources -->
+		<link rel="preconnect" href="https://graphql.anilist.co" />
+		<link rel="dns-prefetch" href="https://s4.anilist.co" />
 	</head>
 	<body>
-		<div class="container">
-			<header class="flex flex-col items-center gap-lg mt-xl mb-xl">
-				<h1 class="animate-fade-in">Anime Time Calculator</h1>
-				<p class="animate-slide-up">Calculate the total time needed to watch your favorite anime series</p>
+		<div class="app-container">
+			<!-- Header Section -->
+			<header class="app-header">
+				<div class="header-content">
+					<h1 class="app-title animate-fade-in">
+						<span class="title-gradient">Anime Time Calculator</span>
+					</h1>
+					<p class="app-subtitle animate-slide-up">
+						Calculate the total time needed to watch your favorite anime series
+					</p>
+				</div>
 			</header>
 			
-			<main class="grid gap-xl">
-				<!-- AnimeSearch Component -->
-				<section class="animate-scale-in">
+			<!-- Main Content -->
+			<main class="app-main">
+				<!-- Search Section -->
+				<section class="search-section animate-scale-in">
 					<AnimeSearch />
 				</section>
 				
-				<!-- Placeholder for future components -->
-				<div class="card animate-scale-in" id="anime-results" style="display: none;">
-					<p>Anime information will appear here...</p>
+				<!-- Content Grid - Anime Display and Time Calculator -->
+				<div class="content-grid" id="content-grid">
+					<!-- Anime Display Section -->
+					<section class="anime-section" id="anime-section">
+						<AnimeDisplay />
+					</section>
+					
+					<!-- Time Calculator Section -->
+					<section class="calculator-section" id="calculator-section">
+						<TimeCalculator />
+					</section>
+				</div>
+				
+				<!-- Empty State -->
+				<div class="empty-state" id="empty-state">
+					<div class="empty-state-content">
+						<div class="empty-state-icon">
+							<svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+								<path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+								<path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+							</svg>
+						</div>
+						<h2 class="empty-state-title">Ready to Calculate Watch Time</h2>
+						<p class="empty-state-description">
+							Search for an anime above to see detailed information and calculate total watch time with customizable options for opening and ending themes.
+						</p>
+					</div>
 				</div>
 			</main>
 			
-			<script>
-				// Listen for search results from the AnimeSearch component
-				document.addEventListener('animeSearchResult', (event) => {
+			<!-- Footer -->
+			<footer class="app-footer">
+				<div class="footer-content">
+					<p class="footer-text">
+						Data provided by <a href="https://anilist.co" target="_blank" rel="noopener noreferrer" class="footer-link">AniList</a>
+					</p>
+				</div>
+			</footer>
+		</div>
+
+		<style>
+			/* App Layout Styles */
+			.app-container {
+				min-height: 100vh;
+				display: flex;
+				flex-direction: column;
+				background: var(--background);
+			}
+
+			/* Header Styles */
+			.app-header {
+				padding: var(--space-xl) var(--space-lg);
+				text-align: center;
+				background: linear-gradient(135deg, rgba(64, 224, 208, 0.05), rgba(127, 255, 212, 0.02));
+				border-bottom: 1px solid rgba(64, 224, 208, 0.1);
+			}
+
+			.header-content {
+				max-width: 800px;
+				margin: 0 auto;
+			}
+
+			.app-title {
+				font-size: var(--font-size-4xl);
+				font-weight: 700;
+				margin: 0 0 var(--space-md) 0;
+				line-height: 1.1;
+			}
+
+			.title-gradient {
+				background: linear-gradient(135deg, var(--primary-aqua), var(--primary-aqua-dark));
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				background-clip: text;
+			}
+
+			.app-subtitle {
+				font-size: var(--font-size-lg);
+				color: var(--text-secondary);
+				margin: 0;
+				font-weight: 400;
+				line-height: 1.4;
+			}
+
+			/* Main Content Styles */
+			.app-main {
+				flex: 1;
+				padding: var(--space-xl) var(--space-lg);
+				max-width: 1200px;
+				margin: 0 auto;
+				width: 100%;
+			}
+
+			.search-section {
+				margin-bottom: var(--space-2xl);
+			}
+
+			.content-grid {
+				display: none; /* Hidden by default, shown when anime is loaded */
+				grid-template-columns: 1fr;
+				gap: var(--space-2xl);
+				margin-bottom: var(--space-2xl);
+			}
+
+			.content-grid.visible {
+				display: grid;
+				animation: fadeIn var(--transition-slow) ease-out;
+			}
+
+			.anime-section,
+			.calculator-section {
+				opacity: 0;
+				transform: translateY(20px);
+				transition: all var(--transition-slow);
+			}
+
+			.content-grid.visible .anime-section,
+			.content-grid.visible .calculator-section {
+				opacity: 1;
+				transform: translateY(0);
+			}
+
+			.content-grid.visible .calculator-section {
+				transition-delay: 0.2s;
+			}
+
+			/* Empty State Styles */
+			.empty-state {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				min-height: 400px;
+				padding: var(--space-2xl);
+			}
+
+			.empty-state.hidden {
+				display: none;
+			}
+
+			.empty-state-content {
+				text-align: center;
+				max-width: 500px;
+			}
+
+			.empty-state-icon {
+				color: var(--primary-aqua-light);
+				margin-bottom: var(--space-lg);
+				opacity: 0.8;
+			}
+
+			.empty-state-title {
+				font-size: var(--font-size-2xl);
+				font-weight: 600;
+				color: var(--text-primary);
+				margin: 0 0 var(--space-md) 0;
+			}
+
+			.empty-state-description {
+				font-size: var(--font-size-base);
+				color: var(--text-secondary);
+				margin: 0;
+				line-height: 1.6;
+			}
+
+			/* Footer Styles */
+			.app-footer {
+				padding: var(--space-lg);
+				text-align: center;
+				border-top: 1px solid rgba(64, 224, 208, 0.1);
+				background: rgba(64, 224, 208, 0.02);
+			}
+
+			.footer-content {
+				max-width: 800px;
+				margin: 0 auto;
+			}
+
+			.footer-text {
+				font-size: var(--font-size-sm);
+				color: var(--text-secondary);
+				margin: 0;
+			}
+
+			.footer-link {
+				color: var(--primary-aqua-dark);
+				text-decoration: none;
+				font-weight: 500;
+				transition: color var(--transition-fast);
+			}
+
+			.footer-link:hover {
+				color: var(--primary-aqua);
+				text-decoration: underline;
+			}
+
+			/* Responsive Design */
+			@media (min-width: 768px) {
+				.app-header {
+					padding: var(--space-2xl) var(--space-lg);
+				}
+
+				.app-title {
+					font-size: var(--font-size-5xl);
+				}
+
+				.app-subtitle {
+					font-size: var(--font-size-xl);
+				}
+
+				.content-grid {
+					grid-template-columns: 1fr 1fr;
+					gap: var(--space-3xl);
+					align-items: start;
+				}
+
+				.empty-state {
+					min-height: 500px;
+				}
+			}
+
+			@media (min-width: 1024px) {
+				.app-main {
+					padding: var(--space-3xl) var(--space-xl);
+				}
+
+				.search-section {
+					margin-bottom: var(--space-3xl);
+				}
+
+				.content-grid {
+					gap: var(--space-4xl);
+				}
+			}
+
+			/* High Contrast Mode */
+			@media (prefers-contrast: high) {
+				.title-gradient {
+					-webkit-text-fill-color: var(--text-primary);
+					background: none;
+				}
+
+				.app-header,
+				.app-footer {
+					border-width: 2px;
+				}
+			}
+
+			/* Reduced Motion */
+			@media (prefers-reduced-motion: reduce) {
+				.animate-fade-in,
+				.animate-slide-up,
+				.animate-scale-in {
+					animation: none;
+				}
+
+				.content-grid.visible .anime-section,
+				.content-grid.visible .calculator-section {
+					transition: none;
+				}
+			}
+
+			/* Print Styles */
+			@media print {
+				.app-header,
+				.app-footer {
+					background: none;
+					border: none;
+				}
+
+				.empty-state {
+					display: none;
+				}
+			}
+		</style>
+
+		<script>
+			/**
+			 * Main Application State Management
+			 * Handles communication between components and UI state updates
+			 */
+
+			class AnimeTimeCalculatorApp {
+				constructor() {
+					this.currentAnime = null;
+					this.isLoading = false;
+					this.error = null;
+					
+					// Get DOM elements
+					this.contentGrid = document.getElementById('content-grid');
+					this.emptyState = document.getElementById('empty-state');
+					this.animeSection = document.getElementById('anime-section');
+					this.calculatorSection = document.getElementById('calculator-section');
+					
+					this.init();
+				}
+
+				init() {
+					// Listen for search results
+					document.addEventListener('animeSearchResult', this.handleSearchResult.bind(this));
+					
+					// Initialize empty state
+					this.showEmptyState();
+				}
+
+				handleSearchResult(event) {
 					const { data, error, searchTerm } = event.detail;
-					const resultsDiv = document.getElementById('anime-results');
 					
 					if (data) {
-						resultsDiv.innerHTML = `
-							<h3>Found: ${data.title.romaji}</h3>
-							<p>Episodes: ${data.episodes || 'Unknown'}</p>
-							<p>Duration per episode: ${data.duration || 24} minutes</p>
-							${data.coverImage.large ? `<img src="${data.coverImage.large}" alt="${data.title.romaji}" style="max-width: 200px; border-radius: 8px;">` : ''}
-						`;
-						resultsDiv.style.display = 'block';
+						this.setAnime(data);
 					} else if (error) {
-						resultsDiv.innerHTML = `<p class="error-message">Error: ${error}</p>`;
-						resultsDiv.style.display = 'block';
+						this.setError(error);
 					} else {
-						resultsDiv.style.display = 'none';
+						this.showEmptyState();
 					}
-				});
-			</script>
-		</div>
+				}
+
+				setAnime(animeData) {
+					this.currentAnime = animeData;
+					this.error = null;
+					this.isLoading = false;
+					
+					// Update anime display component
+					this.updateAnimeDisplay(animeData, false, null);
+					
+					// Update time calculator component
+					this.updateTimeCalculator(animeData);
+					
+					// Show content grid
+					this.showContentGrid();
+					
+					// Preload anime image for better UX
+					if (window.preloadAnimeImage && animeData.coverImage.large) {
+						window.preloadAnimeImage(animeData.coverImage.large);
+					}
+				}
+
+				setError(error) {
+					this.currentAnime = null;
+					this.error = error;
+					this.isLoading = false;
+					
+					// Update anime display with error
+					this.updateAnimeDisplay(null, false, error);
+					
+					// Update time calculator with no data
+					this.updateTimeCalculator(null);
+					
+					// Show content grid to display error
+					this.showContentGrid();
+				}
+
+				setLoading(loading) {
+					this.isLoading = loading;
+					
+					if (loading) {
+						// Update anime display with loading state
+						this.updateAnimeDisplay(null, true, null);
+						
+						// Show content grid
+						this.showContentGrid();
+					}
+				}
+
+				showEmptyState() {
+					this.currentAnime = null;
+					this.error = null;
+					this.isLoading = false;
+					
+					if (this.contentGrid) {
+						this.contentGrid.classList.remove('visible');
+					}
+					
+					if (this.emptyState) {
+						this.emptyState.classList.remove('hidden');
+					}
+				}
+
+				showContentGrid() {
+					if (this.emptyState) {
+						this.emptyState.classList.add('hidden');
+					}
+					
+					if (this.contentGrid) {
+						this.contentGrid.classList.add('visible');
+					}
+				}
+
+				updateAnimeDisplay(anime, isLoading, error) {
+					// Find the AnimeDisplay component and update its props
+					const animeDisplayElement = this.animeSection?.querySelector('.anime-display');
+					if (animeDisplayElement) {
+						// Store data for component to access
+						animeDisplayElement.dataset.anime = anime ? JSON.stringify(anime) : '';
+						animeDisplayElement.dataset.isLoading = isLoading.toString();
+						animeDisplayElement.dataset.error = error || '';
+						
+						// Trigger component update if it has an update method
+						if (window.updateAnimeDisplay) {
+							window.updateAnimeDisplay(anime, isLoading, error);
+						}
+					}
+				}
+
+				updateTimeCalculator(anime) {
+					// Update the TimeCalculator component with new anime data
+					if (window.updateTimeCalculator) {
+						window.updateTimeCalculator(anime);
+					}
+					
+					// Store data for component to access
+					const calculatorElement = this.calculatorSection?.querySelector('.time-calculator');
+					if (calculatorElement) {
+						calculatorElement.dataset.anime = anime ? JSON.stringify(anime) : '';
+					}
+				}
+
+				// Public API methods
+				getCurrentAnime() {
+					return this.currentAnime;
+				}
+
+				getLoadingState() {
+					return this.isLoading;
+				}
+
+				getError() {
+					return this.error;
+				}
+			}
+
+			// Initialize the application when DOM is ready
+			document.addEventListener('DOMContentLoaded', () => {
+				window.animeApp = new AnimeTimeCalculatorApp();
+			});
+
+			// Handle loading states from search component
+			document.addEventListener('animeSearchLoading', (event) => {
+				if (window.animeApp) {
+					window.animeApp.setLoading(event.detail.loading);
+				}
+			});
+
+			// Smooth scroll to content when anime is loaded
+			document.addEventListener('animeSearchResult', (event) => {
+				if (event.detail.data) {
+					setTimeout(() => {
+						const contentGrid = document.getElementById('content-grid');
+						if (contentGrid) {
+							contentGrid.scrollIntoView({ 
+								behavior: 'smooth', 
+								block: 'start' 
+							});
+						}
+					}, 300);
+				}
+			});
+		</script>
 	</body>
 </html>
