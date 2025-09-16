@@ -75,10 +75,11 @@
 
   .search-label {
     display: block;
-    font-size: var(--font-size-lg);
-    font-weight: 600;
+    font-size: var(--font-size-xl);
+    font-weight: 700;
     color: var(--text-primary);
-    margin-bottom: var(--space-sm);
+    margin-bottom: var(--space-md);
+    text-shadow: 0 1px 2px rgba(0, 206, 209, 0.1);
   }
 
   .search-input-wrapper {
@@ -88,37 +89,43 @@
   }
 
   .search-input {
-    padding-left: 3rem;
-    padding-right: 3rem;
-    font-size: var(--font-size-lg);
-    height: 3.5rem;
-    border: 2px solid var(--primary-aqua-light);
-    border-radius: var(--radius-lg);
+    padding-left: 3.5rem;
+    padding-right: 3.5rem;
+    font-size: var(--font-size-xl);
+    height: 4rem;
+    border: 3px solid var(--primary-aqua-light);
+    border-radius: var(--radius-xl);
     background: var(--surface);
     transition: all var(--transition-fast);
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 8px 16px rgba(0, 206, 209, 0.1);
+    font-weight: 500;
   }
 
   .search-input:focus {
     border-color: var(--primary-aqua);
-    box-shadow: 0 0 0 3px var(--interactive-focus), var(--shadow-md);
-    transform: translateY(-2px);
+    box-shadow: 0 0 0 4px rgba(0, 206, 209, 0.2), 0 12px 24px rgba(0, 206, 209, 0.15);
+    transform: translateY(-3px);
     background: var(--surface-elevated);
   }
 
   .search-input:hover:not(:focus) {
     border-color: var(--primary-aqua);
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 10px 20px rgba(0, 206, 209, 0.12);
     background: var(--surface-hover);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
   }
 
   .search-icon {
     position: absolute;
-    left: 1rem;
+    left: 1.25rem;
     color: var(--primary-aqua);
     pointer-events: none;
     transition: color var(--transition-fast);
+  }
+  
+  .search-icon svg {
+    width: 24px;
+    height: 24px;
   }
 
   .search-input:focus + .search-icon {
@@ -127,17 +134,22 @@
 
   .clear-button {
     position: absolute;
-    right: 1rem;
+    right: 1.25rem;
     background: none;
     border: none;
     color: var(--text-secondary);
     cursor: pointer;
-    padding: 0.25rem;
-    border-radius: var(--radius-sm);
+    padding: 0.5rem;
+    border-radius: var(--radius-md);
     transition: all var(--transition-fast);
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  
+  .clear-button svg {
+    width: 20px;
+    height: 20px;
   }
 
   .clear-button:hover {

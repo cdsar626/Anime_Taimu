@@ -59,6 +59,31 @@ const ANIME_SEARCH_QUERY = `
   }
 `;
 
+// GraphQL query for fetching popular anime (for random selection)
+const POPULAR_ANIME_QUERY = `
+  query ($page: Int, $perPage: Int) {
+    Page (page: $page, perPage: $perPage) {
+      media (type: ANIME, sort: POPULARITY_DESC, status: FINISHED) {
+        id
+        title {
+          romaji
+          english
+          native
+        }
+        coverImage {
+          large
+          medium
+        }
+        episodes
+        duration
+        status
+        description
+        popularity
+      }
+    }
+  }
+`;
+
 // Debouncing utility
 let searchTimeout = null;
 const DEBOUNCE_DELAY = 300; // 300ms delay as specified in design
@@ -232,6 +257,45 @@ export function cancelPendingSearch() {
  */
 export function getDefaultEpisodeDuration() {
   return 24; // Standard anime episode length as specified in requirements
+}
+
+/**
+ * Fetches a random popular anime from the top 1000
+ * @returns {Promise<ApiResponse>} Promise resolving to random anime data
+ */
+export async function getRandomPopularAnime() {
+  try {
+    // Get a random page from the first 20 pages (50 per page = 1000 total)
+    const randomPage = Math.floor(Math.random() * 20) + 1;
+    
+    const data = await makeGraphQLRequest(POPULAR_ANIME_QUERY, { 
+      page: randomPage, 
+      perPage: 50 
+    });
+    
+    if (!data.Page || !data.Page.media || data.Page.media.length === 0) {
+      return { data: null, error: 'No popular anime found.' };
+    }
+    
+    // Select a random anime from the page
+    const randomIndex = Math.floor(Math.random() * data.Page.media.length);
+    const randomAnime = data.Page.media[randomIndex];
+    
+    const validatedData = validateAndNormalizeAnimeData({ Media: randomAnime });
+    
+    if (!validatedData) {
+      return { data: null, error: 'Failed to load random anime.' };
+    }
+    
+    return { data: validatedData, error: null };
+    
+  } catch (error) {
+    console.error('Random anime fetch error:', error);
+    return { 
+      data: null, 
+      error: 'Failed to load random anime. Please try searching manually.' 
+    };
+  }
 }
 
 /**

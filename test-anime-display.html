@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Anime Display</title>
+    <style>
+        :root {
+            --font-size-6xl: 3.75rem;
+            --font-size-4xl: 2.25rem;
+            --font-size-2xl: 1.5rem;
+            --font-size-xl: 1.25rem;
+            --font-size-lg: 1.125rem;
+            --font-size-sm: 0.875rem;
+            --font-size-xs: 0.75rem;
+            --radius-2xl: 1.5rem;
+            --radius-xl: 1rem;
+            --radius-lg: 0.75rem;
+            --radius-full: 9999px;
+            --space-3xl: 3rem;
+            --space-2xl: 2rem;
+            --space-xl: 1.5rem;
+            --space-lg: 1rem;
+            --space-sm: 0.5rem;
+            --space-xs: 0.25rem;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666;
+            --primary-aqua: #00CED1;
+            --primary-aqua-light: #48D1CC;
+            --primary-aqua-dark: #008B8B;
+            --transition-normal: 250ms ease;
+        }
+        
+        body {
+            margin: 0;
+            padding: 2rem;
+            font-family: system-ui, sans-serif;
+            background: #f8f9fa;
+        }
+        
+        .anime-display__content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-3xl);
+            text-align: center;
+            padding: var(--space-3xl);
+            min-height: 70vh;
+            justify-content: center;
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .anime-display__hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-3xl);
+            margin-bottom: var(--space-2xl);
+            position: relative;
+        }
+        
+        .anime-display__cover-container {
+            position: relative;
+            border-radius: var(--radius-2xl);
+            overflow: hidden;
+            box-shadow: 
+                0 32px 64px rgba(0, 206, 209, 0.25),
+                0 16px 32px rgba(0, 0, 0, 0.15),
+                0 0 0 4px rgba(0, 206, 209, 0.1);
+            transition: all var(--transition-normal);
+            background: linear-gradient(135deg, var(--primary-aqua-light), var(--primary-aqua));
+        }
+        
+        .anime-display__cover {
+            width: 320px;
+            height: 450px;
+            object-fit: cover;
+            display: block;
+            transition: all var(--transition-normal);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .anime-display__title-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-lg);
+            max-width: 800px;
+        }
+        
+        .anime-display__main-title {
+            font-size: var(--font-size-6xl);
+            font-weight: 900;
+            color: var(--text-primary);
+            margin: 0;
+            line-height: 1;
+            text-shadow: 0 4px 8px rgba(0, 206, 209, 0.3);
+            text-align: center;
+            letter-spacing: -0.02em;
+        }
+        
+        .anime-display__subtitle {
+            font-size: var(--font-size-2xl);
+            color: var(--text-secondary);
+            margin: 0;
+            font-style: italic;
+            font-weight: 600;
+            opacity: 0.9;
+            text-align: center;
+        }
+        
+        .anime-display__stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-2xl);
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        .anime-display__stat-card {
+            display: flex;
+            align-items: center;
+            gap: var(--space-lg);
+            padding: var(--space-2xl);
+            background: linear-gradient(135deg, rgba(0, 206, 209, 0.12), rgba(72, 209, 204, 0.06));
+            border: none;
+            border-radius: var(--radius-xl);
+            box-shadow: 
+                0 16px 32px rgba(0, 206, 209, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .anime-display__stat-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary-aqua), var(--primary-aqua-dark));
+            border-radius: var(--radius-lg);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 206, 209, 0.3);
+            flex-shrink: 0;
+        }
+        
+        .anime-display__stat-content {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+            flex: 1;
+        }
+        
+        .anime-display__stat-label {
+            font-size: var(--font-size-sm);
+            font-weight: 700;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+        }
+        
+        .anime-display__stat-value {
+            font-size: var(--font-size-xl);
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body>
+    <h1>Test: Hero-Style Anime Display</h1>
+    
+    <div class="anime-display__content">
+        <div class="anime-display__hero">
+            <div class="anime-display__cover-container">
+                <img 
+                    class="anime-display__cover"
+                    src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx16498-73IhOXpJZiMF.jpg"
+                    alt="Attack on Titan cover"
+                />
+            </div>
+            
+            <div class="anime-display__title-section">
+                <h1 class="anime-display__main-title">Attack on Titan</h1>
+                <p class="anime-display__subtitle">Shingeki no Kyojin</p>
+            </div>
+        </div>
+        
+        <div class="anime-display__stats">
+            <div class="anime-display__stat-card">
+                <div class="anime-display__stat-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                        <line x1="8" y1="21" x2="16" y2="21"></line>
+                        <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                </div>
+                <div class="anime-display__stat-content">
+                    <span class="anime-display__stat-label">Episodes</span>
+                    <span class="anime-display__stat-value">25</span>
+                </div>
+            </div>
+            
+            <div class="anime-display__stat-card">
+                <div class="anime-display__stat-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12,6 12,12 16,14"></polyline>
+                    </svg>
+                </div>
+                <div class="anime-display__stat-content">
+                    <span class="anime-display__stat-label">Duration</span>
+                    <span class="anime-display__stat-value">24 min/ep</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

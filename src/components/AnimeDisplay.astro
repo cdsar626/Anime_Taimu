@@ -51,57 +51,128 @@ const { anime, isLoading = false, error = null } = Astro.props;
     </div>
   )}
 
-  {anime && !isLoading && !error && (
-    <div class="anime-display__content animate-fade-in">
-      <div class="anime-display__cover-container">
-        <img
-          class="anime-display__cover"
-          src={anime.coverImage.large || anime.coverImage.medium}
-          alt={`Cover image for ${anime.title.english || anime.title.romaji}`}
-          loading="lazy"
-          decoding="async"
-          onload="this.classList.add('loaded')"
-          onerror="this.classList.add('error'); this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjI4MCIgdmlld0JveD0iMCAwIDIwMCAyODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjgwIiBmaWxsPSIjRjBGRkZGIi8+CjxwYXRoIGQ9Ik0xMDAgMTQwQzExMC40NTcgMTQwIDExOSAxMzEuNDU3IDExOSAxMjFDMTE5IDExMC41NDMgMTEwLjQ1NyAxMDIgMTAwIDEwMkM4OS41NDMgMTAyIDgxIDExMC41NDMgODEgMTIxQzgxIDEzMS40NTcgODkuNTQzIDE0MCAxMDAgMTQwWiIgZmlsbD0iIzQwRTBEMCIvPgo8cGF0aCBkPSJNMTAwIDE2MEMxMDQuNDE4IDE2MCAxMDggMTU2LjQxOCAxMDggMTUyQzEwOCAxNDcuNTgyIDEwNC40MTggMTQ0IDEwMCAxNDRDOTUuNTgyIDE0NCA5MiAxNDcuNTgyIDkyIDE1MkM5MiAxNTYuNDE4IDk1LjU4MiAxNjAgMTAwIDE2MFoiIGZpbGw9IiM0MEUwRDAiLz4KPHN2Zz4K'"
-        />
-        <div class="anime-display__cover-overlay"></div>
-      </div>
-      
-      <div class="anime-display__info">
-        <h2 class="anime-display__title">
-          {anime.title.english || anime.title.romaji}
-        </h2>
-        
-        {anime.title.english && anime.title.romaji !== anime.title.english && (
-          <p class="anime-display__subtitle">
-            {anime.title.romaji}
-          </p>
-        )}
-        
-        <div class="anime-display__episode-info">
-          <div class="anime-display__episode-count">
-            <span class="anime-display__label">Episodes:</span>
-            <span class="anime-display__value">
-              {anime.episodes || 'Unknown'}
-            </span>
-          </div>
-          
-          <div class="anime-display__episode-duration">
-            <span class="anime-display__label">Duration:</span>
-            <span class="anime-display__value">
-              {anime.duration || 24} min/ep
-            </span>
-            {!anime.duration && (
-              <span class="anime-display__default-note">(default)</span>
-            )}
+  {!anime && !isLoading && !error && (
+    <div class="anime-display__content">
+      <div class="anime-display__hero">
+        <div class="anime-display__cover-container">
+          <div class="anime-display__cover anime-display__cover-placeholder">
+            <svg width="160" height="225" viewBox="0 0 160 225" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="160" height="225" fill="rgba(0, 206, 209, 0.1)" rx="12"/>
+              <circle cx="80" cy="90" r="20" fill="rgba(0, 206, 209, 0.3)"/>
+              <rect x="50" y="130" width="60" height="8" fill="rgba(0, 206, 209, 0.2)" rx="4"/>
+              <rect x="60" y="150" width="40" height="6" fill="rgba(0, 206, 209, 0.15)" rx="3"/>
+            </svg>
           </div>
         </div>
         
-        <div class="anime-display__meta">
-          {anime.status && (
-            <span class="anime-display__status" data-status={anime.status.toLowerCase()}>
-              {anime.status.replace('_', ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase())}
-            </span>
+        <div class="anime-display__title-section">
+          <h1 class="anime-display__main-title">Search for an anime</h1>
+          <p class="anime-display__subtitle">Use the search box above to find your favorite series</p>
+        </div>
+      </div>
+      
+      <div class="anime-display__stats">
+        <div class="anime-display__stat-card anime-display__stat-card--placeholder">
+          <div class="anime-display__stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+          </div>
+          <div class="anime-display__stat-content">
+            <span class="anime-display__stat-label">Episodes</span>
+            <span class="anime-display__stat-value">?</span>
+          </div>
+        </div>
+        
+        <div class="anime-display__stat-card anime-display__stat-card--placeholder">
+          <div class="anime-display__stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12,6 12,12 16,14"></polyline>
+            </svg>
+          </div>
+          <div class="anime-display__stat-content">
+            <span class="anime-display__stat-label">Duration</span>
+            <span class="anime-display__stat-value">? min/ep</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )}
+
+  {anime && !isLoading && !error && (
+    <div class="anime-display__content animate-fade-in">
+      <!-- Hero Section with Large Cover and Title -->
+      <div class="anime-display__hero">
+        <div class="anime-display__cover-container">
+          <img
+            class="anime-display__cover"
+            src={anime.coverImage.large || anime.coverImage.medium}
+            alt={`Cover image for ${anime.title.english || anime.title.romaji}`}
+            loading="lazy"
+            decoding="async"
+            onload="this.classList.add('loaded')"
+            onerror="this.classList.add('error'); this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjQyMCIgdmlld0JveD0iMCAwIDMwMCA0MjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iNDIwIiBmaWxsPSIjRjBGRkZGIi8+CjxwYXRoIGQ9Ik0xNTAgMjEwQzE2NS41MjMgMjEwIDE3OC4wIDIwMC41MjMgMTc4LjAgMTg4LjVDMTc4LjAgMTc2LjQ3NyAxNjUuNTIzIDE2Ny4wIDE1MC4wIDE2Ny4wQzEzNC40NzcgMTY3LjAgMTIyLjAgMTc2LjQ3NyAxMjIuMCAxODguNUMxMjIuMCAyMDAuNTIzIDEzNC40NzcgMjEwIDE1MCAyMTBaIiBmaWxsPSIjMDBDRUQxIi8+CjxwYXRoIGQ9Ik0xNTAgMjQwQzE1Ni42MjcgMjQwIDE2Mi4wIDIzNC42MjcgMTYyLjAgMjI4QzE2Mi4wIDIyMS4zNzMgMTU2LjYyNyAyMTYgMTUwIDIxNkMxNDMuMzczIDIxNiAxMzggMjIxLjM3MyAxMzggMjI4QzEzOCAyMzQuNjI3IDE0My4zNzMgMjQwIDE1MCAyNDBaIiBmaWxsPSIjMDBDRUQxIi8+Cjwvc3ZnPgo='"
+          />
+          <div class="anime-display__cover-overlay"></div>
+          <div class="anime-display__cover-glow"></div>
+        </div>
+        
+        <div class="anime-display__title-section">
+          <h1 class="anime-display__main-title">
+            {anime.title.english || anime.title.romaji}
+          </h1>
+          
+          {anime.title.english && anime.title.romaji !== anime.title.english && (
+            <p class="anime-display__subtitle">
+              {anime.title.romaji}
+            </p>
           )}
+          
+          {anime.status && (
+            <div class="anime-display__status-badge" data-status={anime.status.toLowerCase()}>
+              {anime.status.replace('_', ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase())}
+            </div>
+          )}
+        </div>
+      </div>
+      
+      <!-- Episode Information Cards -->
+      <div class="anime-display__stats">
+        <div class="anime-display__stat-card">
+          <div class="anime-display__stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+          </div>
+          <div class="anime-display__stat-content">
+            <span class="anime-display__stat-label">Episodes</span>
+            <span class="anime-display__stat-value">
+              {anime.episodes || 'Unknown'}
+            </span>
+          </div>
+        </div>
+        
+        <div class="anime-display__stat-card">
+          <div class="anime-display__stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12,6 12,12 16,14"></polyline>
+            </svg>
+          </div>
+          <div class="anime-display__stat-content">
+            <span class="anime-display__stat-label">Duration</span>
+            <span class="anime-display__stat-value">
+              {anime.duration || 24} min/ep
+              {!anime.duration && (
+                <span class="anime-display__stat-note">(default)</span>
+              )}
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -111,7 +182,6 @@ const { anime, isLoading = false, error = null } = Astro.props;
 <style>
   .anime-display {
     width: 100%;
-    max-width: 600px;
     margin: 0 auto;
   }
 
@@ -120,33 +190,35 @@ const { anime, isLoading = false, error = null } = Astro.props;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-lg);
+    gap: var(--space-2xl);
+    padding: var(--space-3xl);
   }
 
   .anime-display__cover-skeleton {
-    width: 200px;
-    height: 280px;
-    border-radius: var(--radius-lg);
+    width: 320px;
+    height: 450px;
+    border-radius: var(--radius-xl);
   }
 
   .anime-display__title-skeleton {
     width: 100%;
-    max-width: 300px;
+    max-width: 500px;
     display: flex;
     flex-direction: column;
-    gap: var(--space-sm);
+    gap: var(--space-lg);
+    align-items: center;
   }
 
   .anime-display__title-line {
-    height: 2rem;
+    height: 4rem;
     width: 100%;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-lg);
   }
 
   .anime-display__subtitle-line {
-    height: 1.5rem;
+    height: 2rem;
     width: 75%;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
   }
 
   /* Error States */
@@ -175,21 +247,41 @@ const { anime, isLoading = false, error = null } = Astro.props;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-lg);
+    gap: var(--space-3xl);
     text-align: center;
+    padding: var(--space-3xl);
+    min-height: 70vh;
+    justify-content: center;
+  }
+
+  /* Hero Section - Main Focus */
+  .anime-display__hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3xl);
+    margin-bottom: var(--space-2xl);
+    position: relative;
   }
 
   .anime-display__cover-container {
     position: relative;
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-2xl);
     overflow: hidden;
-    box-shadow: var(--shadow-lg);
+    box-shadow: 
+      0 32px 64px rgba(0, 206, 209, 0.25),
+      0 16px 32px rgba(0, 0, 0, 0.15),
+      0 0 0 4px rgba(0, 206, 209, 0.1);
     transition: all var(--transition-normal);
+    background: linear-gradient(135deg, var(--primary-aqua-light), var(--primary-aqua));
   }
 
   .anime-display__cover-container:hover {
-    transform: translateY(-6px) scale(1.02);
-    box-shadow: var(--shadow-xl), var(--shadow-glow-soft);
+    transform: translateY(-12px) scale(1.05);
+    box-shadow: 
+      0 40px 80px rgba(0, 206, 209, 0.35),
+      0 20px 40px rgba(0, 0, 0, 0.2),
+      0 0 0 6px rgba(0, 206, 209, 0.2);
   }
 
   .anime-display__cover-container:active {
@@ -197,13 +289,13 @@ const { anime, isLoading = false, error = null } = Astro.props;
   }
 
   .anime-display__cover {
-    width: 200px;
-    height: 280px;
+    width: 320px;
+    height: 450px;
     object-fit: cover;
     display: block;
-    opacity: 0;
-    transition: opacity var(--transition-slow);
-    background: linear-gradient(135deg, var(--primary-aqua-light), var(--primary-aqua));
+    transition: all var(--transition-normal);
+    position: relative;
+    z-index: 1;
   }
 
   .anime-display__cover.loaded {
@@ -222,248 +314,233 @@ const { anime, isLoading = false, error = null } = Astro.props;
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(
-      180deg,
-      transparent 0%,
-      transparent 60%,
-      rgba(64, 224, 208, 0.1) 100%
-    );
+    background: linear-gradient(135deg, rgba(0, 206, 209, 0.15), transparent);
     opacity: 0;
     transition: opacity var(--transition-normal);
+    z-index: 2;
+  }
+
+  .anime-display__cover-glow {
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    right: -20px;
+    bottom: -20px;
+    background: radial-gradient(circle, rgba(0, 206, 209, 0.3) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+    z-index: 0;
+    border-radius: var(--radius-2xl);
   }
 
   .anime-display__cover-container:hover .anime-display__cover-overlay {
     opacity: 1;
   }
 
-  .anime-display__info {
-    width: 100%;
-    max-width: 400px;
+  .anime-display__cover-container:hover .anime-display__cover-glow {
+    opacity: 1;
   }
 
-  .anime-display__title {
-    font-size: var(--font-size-2xl);
-    font-weight: 600;
-    color: var(--text-primary);
-    margin: 0 0 var(--space-sm) 0;
-    line-height: 1.2;
-    background: linear-gradient(135deg, var(--primary-aqua), var(--primary-aqua-dark));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .anime-display__subtitle {
-    font-size: var(--font-size-lg);
-    color: var(--text-secondary);
-    margin: 0 0 var(--space-md) 0;
-    font-style: italic;
-  }
-
-  .anime-display__episode-info {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-md);
-    margin: var(--space-lg) 0;
-    padding: var(--space-md);
-    background: linear-gradient(135deg, rgba(64, 224, 208, 0.08), rgba(127, 255, 212, 0.04));
-    border: 2px solid var(--primary-aqua-light);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
-    transition: all var(--transition-normal);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .anime-display__episode-info::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(64, 224, 208, 0.1), transparent);
-    transition: left var(--transition-slow);
-  }
-
-  .anime-display__episode-info:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-  }
-
-  .anime-display__episode-info:hover::before {
-    left: 100%;
-  }
-
-  .anime-display__episode-count,
-  .anime-display__episode-duration {
+  /* Title Section */
+  .anime-display__title-section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    text-align: center;
-    gap: var(--space-xs);
+    gap: var(--space-lg);
+    max-width: 800px;
   }
 
-  .anime-display__label {
-    font-size: var(--font-size-sm);
-    font-weight: 500;
+  .anime-display__main-title {
+    font-size: var(--font-size-6xl);
+    font-weight: 900;
+    color: var(--text-primary);
+    margin: 0;
+    line-height: 1;
+    text-shadow: 0 4px 8px rgba(0, 206, 209, 0.3);
+    text-align: center;
+    letter-spacing: -0.02em;
+  }
+
+  .anime-display__subtitle {
+    font-size: var(--font-size-2xl);
     color: var(--text-secondary);
+    margin: 0;
+    font-style: italic;
+    font-weight: 600;
+    opacity: 0.9;
+    text-align: center;
+  }
+
+  .anime-display__status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-sm) var(--space-lg);
+    background: linear-gradient(135deg, rgba(0, 206, 209, 0.15), rgba(72, 209, 204, 0.1));
+    border: 2px solid var(--primary-aqua-light);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    color: var(--text-primary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    box-shadow: 0 4px 12px rgba(0, 206, 209, 0.2);
   }
 
-  .anime-display__value {
-    font-size: var(--font-size-lg);
-    font-weight: 600;
-    color: var(--primary-aqua-dark);
+  /* Stats Section */
+  .anime-display__stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2xl);
+    width: 100%;
+    max-width: 600px;
   }
 
-  .anime-display__default-note {
-    font-size: var(--font-size-xs);
-    color: var(--text-secondary);
-    font-style: italic;
-    opacity: 0.8;
-  }
-
-  .anime-display__meta {
+  .anime-display__stat-card {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--space-md);
-    margin-top: var(--space-md);
-  }
-
-  .anime-display__status {
-    padding: var(--space-xs) var(--space-sm);
-    background: var(--surface);
-    border: 2px solid var(--primary-aqua-light);
-    border-radius: var(--radius-md);
-    font-size: var(--font-size-sm);
-    font-weight: 500;
-    color: var(--primary-aqua-dark);
+    align-items: center;
+    gap: var(--space-lg);
+    padding: var(--space-2xl);
+    background: linear-gradient(135deg, rgba(0, 206, 209, 0.12), rgba(72, 209, 204, 0.06));
+    border: none;
+    border-radius: var(--radius-xl);
+    box-shadow: 
+      0 16px 32px rgba(0, 206, 209, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
     transition: all var(--transition-normal);
     position: relative;
     overflow: hidden;
   }
 
-  .anime-display__status::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(64, 224, 208, 0.2), transparent);
-    transition: left var(--transition-slow);
+  .anime-display__stat-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 
+      0 20px 40px rgba(0, 206, 209, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
   }
 
-  .anime-display__status:hover::before {
-    left: 100%;
+  .anime-display__stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--primary-aqua), var(--primary-aqua-dark));
+    border-radius: var(--radius-lg);
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 206, 209, 0.3);
+    flex-shrink: 0;
   }
 
-  .anime-display__status[data-status="finished"] {
-    background: rgba(81, 207, 102, 0.1);
-    border-color: var(--success);
-    color: var(--success);
+  .anime-display__stat-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    flex: 1;
   }
 
-  .anime-display__status[data-status="releasing"] {
-    background: rgba(64, 224, 208, 0.1);
-    border-color: var(--primary-aqua);
-    color: var(--primary-aqua-dark);
+  .anime-display__stat-label {
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.9;
   }
 
-  .anime-display__status[data-status="not yet released"] {
-    background: rgba(112, 128, 144, 0.1);
-    border-color: var(--text-secondary);
+  .anime-display__stat-value {
+    font-size: var(--font-size-xl);
+    font-weight: 800;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  .anime-display__stat-note {
+    font-size: var(--font-size-xs);
     color: var(--text-secondary);
+    font-weight: 500;
+    opacity: 0.8;
   }
+
+  /* Placeholder States */
+  .anime-display__cover-placeholder {
+    width: 320px;
+    height: 450px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(0, 206, 209, 0.05), rgba(72, 209, 204, 0.02));
+    border: 2px dashed rgba(0, 206, 209, 0.2);
+  }
+
+  .anime-display__stat-card--placeholder {
+    opacity: 0.6;
+  }
+
+  .anime-display__stat-card--placeholder .anime-display__stat-icon {
+    background: linear-gradient(135deg, rgba(0, 206, 209, 0.3), rgba(0, 206, 209, 0.2));
+  }
+
+
 
   /* Responsive Design */
   @media (max-width: 767px) {
+    .anime-display__content {
+      padding: var(--space-2xl);
+      gap: var(--space-2xl);
+      min-height: 60vh;
+    }
+
+    .anime-display__hero {
+      gap: var(--space-2xl);
+    }
+
     .anime-display__cover {
-      width: 160px;
-      height: 224px;
+      width: 240px;
+      height: 336px;
     }
 
     .anime-display__cover-skeleton {
-      width: 160px;
-      height: 224px;
+      width: 240px;
+      height: 336px;
     }
 
-    .anime-display__title {
+    .anime-display__main-title {
+      font-size: var(--font-size-4xl);
+    }
+
+    .anime-display__subtitle {
       font-size: var(--font-size-xl);
     }
 
-    .anime-display__episode-info {
+    .anime-display__stats {
       grid-template-columns: 1fr;
-      gap: var(--space-sm);
-      padding: var(--space-sm);
+      gap: var(--space-lg);
     }
 
-    .anime-display__episode-count,
-    .anime-display__episode-duration {
-      flex-direction: row;
-      justify-content: space-between;
-      text-align: left;
+    .anime-display__stat-card {
+      padding: var(--space-lg);
     }
 
-    .anime-display__meta {
-      flex-direction: column;
-      align-items: center;
+    .anime-display__stat-icon {
+      width: 40px;
+      height: 40px;
     }
 
-    .anime-display__status {
-      width: fit-content;
+    .anime-display__stat-value {
+      font-size: var(--font-size-lg);
     }
   }
 
   @media (min-width: 768px) and (max-width: 1023px) {
     .anime-display__cover {
-      width: 180px;
-      height: 252px;
+      width: 280px;
+      height: 392px;
     }
 
-    .anime-display__cover-skeleton {
-      width: 180px;
-      height: 252px;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .anime-display__content {
-      flex-direction: row;
-      text-align: left;
-      align-items: flex-start;
-      gap: var(--space-2xl);
-    }
-
-    .anime-display__info {
-      flex: 1;
-      max-width: none;
-    }
-
-    .anime-display__episode-info {
-      text-align: center;
-    }
-
-    .anime-display__episode-count,
-    .anime-display__episode-duration {
-      align-items: center;
-    }
-
-    .anime-display__meta {
-      justify-content: flex-start;
-    }
-
-    .anime-display__cover {
-      width: 240px;
-      height: 336px;
-    }
-
-    .anime-display__cover-skeleton {
-      width: 240px;
-      height: 336px;
+    .anime-display__main-title {
+      font-size: var(--font-size-5xl);
     }
   }
 
@@ -562,6 +639,7 @@ const { anime, isLoading = false, error = null } = Astro.props;
   }
 
   function renderAnimeDisplay(container: Element, anime: any, isLoading: boolean, error: string | null) {
+    console.log('renderAnimeDisplay called with:', { anime, isLoading, error });
     let content = '';
 
     if (isLoading) {
@@ -591,53 +669,73 @@ const { anime, isLoading = false, error = null } = Astro.props;
       
       content = `
         <div class="anime-display__content animate-fade-in">
-          <div class="anime-display__cover-container">
-            <img
-              class="anime-display__cover"
-              src="${anime.coverImage.large || anime.coverImage.medium}"
-              alt="Cover image for ${englishTitle}"
-              loading="lazy"
-              decoding="async"
-              onload="this.classList.add('loaded')"
-              onerror="this.classList.add('error'); this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjI4MCIgdmlld0JveD0iMCAwIDIwMCAyODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjgwIiBmaWxsPSIjRjBGRkZGIi8+CjxwYXRoIGQ9Ik0xMDAgMTQwQzExMC40NTcgMTQwIDExOSAxMzEuNDU3IDExOSAxMjFDMTE5IDExMC41NDMgMTEwLjQ1NyAxMDIgMTAwIDEwMkM4OS41NDMgMTAyIDgxIDExMC41NDMgODEgMTIxQzgxIDEzMS40NTcgODkuNTQzIDE0MCAxMDAgMTQwWiIgZmlsbD0iIzQwRTBEMCIvPgo8cGF0aCBkPSJNMTAwIDE2MEMxMDQuNDE4IDE2MCAxMDggMTU2LjQxOCAxMDggMTUyQzEwOCAxNDcuNTgyIDEwNC40MTggMTQ0IDEwMCAxNDRDOTUuNTgyIDE0NCA5MiAxNDcuNTgyIDkyIDE1MkM5MiAxNTYuNDE4IDk1LjU4MiAxNjAgMTAwIDE2MFoiIGZpbGw9IiM0MEUwRDAiLz4KPHN2Zz4K'"
-            />
-            <div class="anime-display__cover-overlay"></div>
+          <!-- Hero Section with Large Cover and Title -->
+          <div class="anime-display__hero">
+            <div class="anime-display__cover-container">
+              <img
+                class="anime-display__cover"
+                src="${anime.coverImage.large || anime.coverImage.medium}"
+                alt="Cover image for ${englishTitle}"
+                loading="lazy"
+                decoding="async"
+                onload="this.classList.add('loaded')"
+                onerror="this.classList.add('error'); this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjQyMCIgdmlld0JveD0iMCAwIDMwMCA0MjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iNDIwIiBmaWxsPSIjRjBGRkZGIi8+CjxwYXRoIGQ9Ik0xNTAgMjEwQzE2NS41MjMgMjEwIDE3OC4wIDIwMC41MjMgMTc4LjAgMTg4LjVDMTc4LjAgMTc2LjQ3NyAxNjUuNTIzIDE2Ny4wIDE1MC4wIDE2Ny4wQzEzNC40NzcgMTY3LjAgMTIyLjAgMTc2LjQ3NyAxMjIuMCAxODguNUMxMjIuMCAyMDAuNTIzIDEzNC40NzcgMjEwIDE1MCAyMTBaIiBmaWxsPSIjMDBDRUQxIi8+CjxwYXRoIGQ9Ik0xNTAgMjQwQzE1Ni42MjcgMjQwIDE2Mi4wIDIzNC42MjcgMTYyLjAgMjI4QzE2Mi4wIDIyMS4zNzMgMTU2LjYyNyAyMTYgMTUwIDIxNkMxNDMuMzczIDIxNiAxMzggMjIxLjM73IDEzOCAyMjhDMTM4IDIzNC42MjcgMTQzLjM3MyAyNDAgMTUwIDI0MFoiIGZpbGw9IiMwMENFRDEiLz4KPHN2Zz4K'"
+              />
+              <div class="anime-display__cover-overlay"></div>
+              <div class="anime-display__cover-glow"></div>
+            </div>
+            
+            <div class="anime-display__title-section">
+              <h1 class="anime-display__main-title">
+                ${englishTitle}
+              </h1>
+              
+              ${showSubtitle ? `
+                <p class="anime-display__subtitle">
+                  ${anime.title.romaji}
+                </p>
+              ` : ''}
+              
+              ${anime.status ? `
+                <div class="anime-display__status-badge" data-status="${anime.status.toLowerCase()}">
+                  ${anime.status.replace('_', ' ').toLowerCase().replace(/\b\w/g, (l: string) => l.toUpperCase())}
+                </div>
+              ` : ''}
+            </div>
           </div>
           
-          <div class="anime-display__info">
-            <h2 class="anime-display__title">
-              ${englishTitle}
-            </h2>
-            
-            ${showSubtitle ? `
-              <p class="anime-display__subtitle">
-                ${anime.title.romaji}
-              </p>
-            ` : ''}
-            
-            <div class="anime-display__episode-info">
-              <div class="anime-display__episode-count">
-                <span class="anime-display__label">Episodes:</span>
-                <span class="anime-display__value">
+          <!-- Episode Information Cards -->
+          <div class="anime-display__stats">
+            <div class="anime-display__stat-card">
+              <div class="anime-display__stat-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                  <line x1="8" y1="21" x2="16" y2="21"></line>
+                  <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+              </div>
+              <div class="anime-display__stat-content">
+                <span class="anime-display__stat-label">Episodes</span>
+                <span class="anime-display__stat-value">
                   ${anime.episodes || 'Unknown'}
                 </span>
               </div>
-              
-              <div class="anime-display__episode-duration">
-                <span class="anime-display__label">Duration:</span>
-                <span class="anime-display__value">
-                  ${anime.duration || 24} min/ep
-                </span>
-                ${!anime.duration ? '<span class="anime-display__default-note">(default)</span>' : ''}
-              </div>
             </div>
             
-            <div class="anime-display__meta">
-              ${anime.status ? `
-                <span class="anime-display__status" data-status="${anime.status.toLowerCase()}">
-                  ${anime.status.replace('_', ' ').toLowerCase().replace(/\b\w/g, (l: string) => l.toUpperCase())}
+            <div class="anime-display__stat-card">
+              <div class="anime-display__stat-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12,6 12,12 16,14"></polyline>
+                </svg>
+              </div>
+              <div class="anime-display__stat-content">
+                <span class="anime-display__stat-label">Duration</span>
+                <span class="anime-display__stat-value">
+                  ${anime.duration || 24} min/ep
+                  ${!anime.duration ? '<span class="anime-display__stat-note">(default)</span>' : ''}
                 </span>
-              ` : ''}
+              </div>
             </div>
           </div>
         </div>

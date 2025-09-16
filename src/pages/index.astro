@@ -74,9 +74,9 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 								<path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
 							</svg>
 						</div>
-						<h2 class="empty-state-title">Ready to Calculate Watch Time</h2>
+						<h2 class="empty-state-title">Search for an anime above</h2>
 						<p class="empty-state-description">
-							Search for an anime above to see detailed information and calculate total watch time with customizable options for opening and ending themes.
+							Find your favorite anime series and see how long it would take to watch with our time calculator!
 						</p>
 					</div>
 				</div>
@@ -103,12 +103,13 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 
 			/* Enhanced Header Styles */
 			.app-header {
-				padding: var(--space-xl) var(--space-lg);
+				padding: var(--space-2xl) var(--space-lg);
 				text-align: center;
-				background: linear-gradient(135deg, rgba(64, 224, 208, 0.08), rgba(127, 255, 212, 0.03));
-				border-bottom: 1px solid rgba(64, 224, 208, 0.15);
+				background: linear-gradient(135deg, rgba(64, 224, 208, 0.12), rgba(127, 255, 212, 0.06));
+				border-bottom: 3px solid rgba(64, 224, 208, 0.3);
 				position: relative;
 				overflow: hidden;
+				box-shadow: 0 4px 20px rgba(64, 224, 208, 0.1);
 			}
 
 			.app-header::before {
@@ -128,21 +129,17 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 			}
 
 			.app-title {
-				font-size: var(--font-size-4xl);
-				font-weight: 700;
-				margin: 0 0 var(--space-md) 0;
-				line-height: 1.1;
+				font-size: var(--font-size-5xl);
+				font-weight: 900;
+				margin: 0 0 var(--space-lg) 0;
+				line-height: 1;
 				position: relative;
 				z-index: 1;
 			}
 
 			.title-gradient {
-				background: linear-gradient(135deg, var(--primary-aqua), var(--primary-aqua-dark), var(--primary-aqua-darker));
-				background-size: 200% 200%;
-				-webkit-background-clip: text;
-				-webkit-text-fill-color: transparent;
-				background-clip: text;
-				animation: gradientShift 4s ease-in-out infinite;
+				color: var(--text-primary);
+				text-shadow: 0 4px 8px rgba(0, 206, 209, 0.3);
 				position: relative;
 			}
 
@@ -162,11 +159,12 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 			}
 
 			.app-subtitle {
-				font-size: var(--font-size-lg);
-				color: var(--text-secondary);
+				font-size: var(--font-size-xl);
+				color: var(--text-primary);
 				margin: 0;
-				font-weight: 400;
+				font-weight: 500;
 				line-height: 1.4;
+				opacity: 0.9;
 			}
 
 			/* Main Content Styles */
@@ -183,49 +181,35 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 			}
 
 			.content-grid {
-				display: none; /* Hidden by default, shown when anime is loaded */
+				display: grid;
 				grid-template-columns: 1fr;
 				gap: var(--space-2xl);
 				margin-bottom: var(--space-2xl);
+				opacity: 1;
 			}
 
 			.content-grid.visible {
-				display: grid;
 				animation: fadeIn var(--transition-slow) ease-out;
 			}
 
 			.anime-section,
 			.calculator-section {
-				opacity: 0;
-				transform: translateY(20px);
-				transition: all var(--transition-slow);
-			}
-
-			.content-grid.visible .anime-section,
-			.content-grid.visible .calculator-section {
 				opacity: 1;
 				transform: translateY(0);
-			}
-
-			.content-grid.visible .anime-section {
-				transition-delay: 0.1s;
-			}
-
-			.content-grid.visible .calculator-section {
-				transition-delay: 0.3s;
+				transition: all var(--transition-slow);
 			}
 
 			/* Empty State Styles */
 			.empty-state {
-				display: flex;
+				display: none;
 				justify-content: center;
 				align-items: center;
 				min-height: 400px;
 				padding: var(--space-2xl);
 			}
 
-			.empty-state.hidden {
-				display: none;
+			.empty-state.visible {
+				display: flex;
 			}
 
 			.empty-state-content {
@@ -240,17 +224,20 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 			}
 
 			.empty-state-title {
-				font-size: var(--font-size-2xl);
-				font-weight: 600;
+				font-size: var(--font-size-3xl);
+				font-weight: 800;
 				color: var(--text-primary);
-				margin: 0 0 var(--space-md) 0;
+				margin: 0 0 var(--space-lg) 0;
+				text-shadow: 0 2px 4px rgba(0, 206, 209, 0.2);
 			}
 
 			.empty-state-description {
-				font-size: var(--font-size-base);
+				font-size: var(--font-size-lg);
 				color: var(--text-secondary);
 				margin: 0;
 				line-height: 1.6;
+				font-weight: 500;
+				opacity: 0.9;
 			}
 
 			/* Enhanced Footer Styles */
@@ -306,27 +293,48 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 			}
 
 			/* Responsive Design */
-			@media (min-width: 768px) {
+			@media (max-width: 767px) {
 				.app-header {
-					padding: var(--space-2xl) var(--space-lg);
+					padding: var(--space-xl) var(--space-md);
 				}
 
 				.app-title {
-					font-size: var(--font-size-5xl);
+					font-size: var(--font-size-3xl);
 				}
 
 				.app-subtitle {
-					font-size: var(--font-size-xl);
+					font-size: var(--font-size-lg);
+				}
+
+				.app-main {
+					padding: var(--space-lg) var(--space-md);
+				}
+
+				.empty-state-title {
+					font-size: var(--font-size-2xl);
+				}
+
+				.empty-state-description {
+					font-size: var(--font-size-base);
+				}
+			}
+
+			@media (min-width: 768px) {
+				.app-header {
+					padding: var(--space-3xl) var(--space-lg);
 				}
 
 				.content-grid {
-					grid-template-columns: 1fr 1fr;
+					grid-template-columns: 2fr 1fr;
 					gap: var(--space-3xl);
 					align-items: start;
 				}
 
 				.empty-state {
-					min-height: 500px;
+					min-height: 70vh;
+					display: flex;
+					align-items: center;
+					justify-content: center;
 				}
 			}
 
@@ -340,6 +348,7 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 				}
 
 				.content-grid {
+					grid-template-columns: 3fr 2fr;
 					gap: var(--space-4xl);
 				}
 			}
@@ -514,18 +523,45 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 				}
 
 				updateAnimeDisplay(anime, isLoading, error) {
-					// Find the AnimeDisplay component and update its props
-					const animeDisplayElement = this.animeSection?.querySelector('.anime-display');
-					if (animeDisplayElement) {
-						// Store data for component to access
-						animeDisplayElement.dataset.anime = anime ? JSON.stringify(anime) : '';
-						animeDisplayElement.dataset.isLoading = isLoading.toString();
-						animeDisplayElement.dataset.error = error || '';
+					console.log('Anime data received:', anime);
+					
+					if (!anime) return;
+					
+					// Update the existing hero layout elements instead of replacing the entire HTML
+					const titleElement = document.querySelector('.anime-display__main-title');
+					const subtitleElement = document.querySelector('.anime-display__subtitle');
+					const coverElement = document.querySelector('.anime-display__cover');
+					const episodeValueElement = document.querySelector('.anime-display__stat-card:first-child .anime-display__stat-value');
+					const durationValueElement = document.querySelector('.anime-display__stat-card:last-child .anime-display__stat-value');
+					
+					if (titleElement) {
+						titleElement.textContent = anime.title.english || anime.title.romaji;
+					}
+					
+					if (subtitleElement && anime.title.english && anime.title.romaji !== anime.title.english) {
+						subtitleElement.textContent = anime.title.romaji;
+						subtitleElement.style.display = 'block';
+					} else if (subtitleElement) {
+						subtitleElement.style.display = 'none';
+					}
+					
+					if (coverElement && anime.coverImage) {
+						// Replace the placeholder with the actual cover
+						const newImg = document.createElement('img');
+						newImg.className = 'anime-display__cover';
+						newImg.src = anime.coverImage.large || anime.coverImage.medium;
+						newImg.alt = `Cover image for ${anime.title.english || anime.title.romaji}`;
+						newImg.loading = 'lazy';
 						
-						// Trigger component update if it has an update method
-						if (window.updateAnimeDisplay) {
-							window.updateAnimeDisplay(anime, isLoading, error);
-						}
+						coverElement.parentNode?.replaceChild(newImg, coverElement);
+					}
+					
+					if (episodeValueElement) {
+						episodeValueElement.textContent = anime.episodes || 'Unknown';
+					}
+					
+					if (durationValueElement) {
+						durationValueElement.textContent = `${anime.duration || 24} min/ep`;
 					}
 				}
 
@@ -557,8 +593,11 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 			}
 
 			// Initialize the application when DOM is ready
-			document.addEventListener('DOMContentLoaded', () => {
+			document.addEventListener('DOMContentLoaded', async () => {
 				window.animeApp = new AnimeTimeCalculatorApp();
+				
+				// Show empty state initially - user can search manually
+				console.log('Anime Time Calculator initialized - ready for search');
 			});
 
 			// Handle loading states from search component

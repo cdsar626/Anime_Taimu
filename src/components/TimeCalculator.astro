@@ -17,8 +17,8 @@ export interface Props {
 
 const { 
   anime, 
-  initialIncludeOpening = false, 
-  initialIncludeEnding = false,
+  initialIncludeOpening = true, 
+  initialIncludeEnding = true,
   onCalculationChange 
 } = Astro.props;
 
@@ -42,12 +42,12 @@ const hasValidAnime = anime && typeof anime.episodes === 'number' && anime.episo
               class="time-calculator__checkbox"
               id="include-opening"
               data-testid="include-opening"
-              checked={initialIncludeOpening}
+              checked={initialIncludeOpening !== undefined ? initialIncludeOpening : true}
             />
             <span class="time-calculator__checkbox-custom"></span>
             <span class="time-calculator__checkbox-text">
-              Include Opening Themes
-              <span class="time-calculator__checkbox-detail">(+1m 30s per episode)</span>
+              Watch Opening Themes
+              <span class="time-calculator__checkbox-detail">(uncheck to skip and save 1m 30s per episode)</span>
             </span>
           </label>
 
@@ -57,12 +57,12 @@ const hasValidAnime = anime && typeof anime.episodes === 'number' && anime.episo
               class="time-calculator__checkbox"
               id="include-ending"
               data-testid="include-ending"
-              checked={initialIncludeEnding}
+              checked={initialIncludeEnding !== undefined ? initialIncludeEnding : true}
             />
             <span class="time-calculator__checkbox-custom"></span>
             <span class="time-calculator__checkbox-text">
-              Include Ending Themes
-              <span class="time-calculator__checkbox-detail">(+1m 30s per episode)</span>
+              Watch Ending Themes
+              <span class="time-calculator__checkbox-detail">(uncheck to skip and save 1m 30s per episode)</span>
             </span>
           </label>
         </div>
@@ -127,18 +127,31 @@ const hasValidAnime = anime && typeof anime.episodes === 'number' && anime.episo
 
   /* Content */
   .time-calculator__content {
-    background: var(--surface);
-    border: 2px solid var(--primary-aqua-light);
+    background: linear-gradient(135deg, var(--surface), rgba(0, 206, 209, 0.03));
+    border: none;
     border-radius: var(--radius-xl);
-    padding: var(--space-xl);
-    box-shadow: var(--shadow-md);
+    padding: var(--space-2xl);
+    box-shadow: 0 16px 32px rgba(0, 206, 209, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.2);
     transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .time-calculator__content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--primary-aqua), var(--primary-aqua-light), var(--primary-aqua));
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
   }
 
   .time-calculator__content:hover {
-    box-shadow: var(--shadow-lg), var(--shadow-glow-soft);
-    transform: translateY(-3px);
-    background: var(--surface-elevated);
+    box-shadow: 0 20px 40px rgba(0, 206, 209, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transform: translateY(-6px);
+    background: linear-gradient(135deg, var(--surface-elevated), rgba(0, 206, 209, 0.05));
   }
 
   .time-calculator__header {
@@ -147,21 +160,20 @@ const hasValidAnime = anime && typeof anime.episodes === 'number' && anime.episo
   }
 
   .time-calculator__title {
-    font-size: var(--font-size-xl);
-    font-weight: 600;
+    font-size: var(--font-size-2xl);
+    font-weight: 800;
     color: var(--text-primary);
-    margin: 0 0 var(--space-xs) 0;
-    background: linear-gradient(135deg, var(--primary-aqua), var(--primary-aqua-dark));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    margin: 0 0 var(--space-sm) 0;
+    text-shadow: 0 2px 4px rgba(0, 206, 209, 0.2);
   }
 
   .time-calculator__subtitle {
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-base);
     color: var(--text-secondary);
     margin: 0;
     font-style: italic;
+    font-weight: 500;
+    opacity: 0.9;
   }
 
   /* Controls */
@@ -178,21 +190,21 @@ const hasValidAnime = anime && typeof anime.episodes === 'number' && anime.episo
   .time-calculator__checkbox-label {
     display: flex;
     align-items: flex-start;
-    gap: var(--space-md);
+    gap: var(--space-lg);
     cursor: pointer;
-    padding: var(--space-md);
-    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    border-radius: var(--radius-xl);
     transition: all var(--transition-fast);
     position: relative;
-    background: rgba(64, 224, 208, 0.02);
-    border: 2px solid transparent;
+    background: linear-gradient(135deg, rgba(0, 206, 209, 0.08), rgba(72, 209, 204, 0.04));
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 206, 209, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 
   .time-calculator__checkbox-label:hover {
-    background: var(--interactive-hover);
-    border-color: var(--primary-aqua-light);
-    transform: translateX(6px);
-    box-shadow: var(--shadow-sm);
+    background: linear-gradient(135deg, rgba(0, 206, 209, 0.12), rgba(72, 209, 204, 0.06));
+    transform: translateX(10px) translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 206, 209, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
 
   .time-calculator__checkbox-label:active {
@@ -212,15 +224,16 @@ const hasValidAnime = anime && typeof anime.episodes === 'number' && anime.episo
   }
 
   .time-calculator__checkbox-custom {
-    width: 24px;
-    height: 24px;
-    border: 2px solid var(--primary-aqua-light);
-    border-radius: var(--radius-sm);
+    width: 28px;
+    height: 28px;
+    border: 3px solid var(--primary-aqua-light);
+    border-radius: var(--radius-md);
     background: var(--surface);
     position: relative;
     transition: all var(--transition-normal);
     flex-shrink: 0;
     margin-top: 2px;
+    box-shadow: 0 2px 4px rgba(0, 206, 209, 0.1);
   }
 
   .time-calculator__checkbox-custom::after {
@@ -229,17 +242,18 @@ const hasValidAnime = anime && typeof anime.episodes === 'number' && anime.episo
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0);
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
     background: linear-gradient(135deg, var(--primary-aqua), var(--primary-aqua-dark));
-    border-radius: var(--radius-xs);
+    border-radius: var(--radius-sm);
     transition: all var(--transition-normal);
+    box-shadow: 0 2px 4px rgba(0, 206, 209, 0.3);
   }
 
   .time-calculator__checkbox:checked + .time-calculator__checkbox-custom {
-    background: var(--interactive-active);
+    background: linear-gradient(135deg, rgba(0, 206, 209, 0.1), rgba(72, 209, 204, 0.05));
     border-color: var(--primary-aqua);
-    box-shadow: 0 0 0 3px var(--interactive-focus), var(--shadow-glow-soft);
+    box-shadow: 0 0 0 3px rgba(0, 206, 209, 0.2), 0 4px 8px rgba(0, 206, 209, 0.2);
   }
 
   .time-calculator__checkbox:checked + .time-calculator__checkbox-custom::after {
@@ -254,8 +268,8 @@ const hasValidAnime = anime && typeof anime.episodes === 'number' && anime.episo
   }
 
   .time-calculator__checkbox-text {
-    font-size: var(--font-size-base);
-    font-weight: 500;
+    font-size: var(--font-size-lg);
+    font-weight: 600;
     color: var(--text-primary);
     line-height: 1.4;
   }
@@ -263,26 +277,27 @@ const hasValidAnime = anime && typeof anime.episodes === 'number' && anime.episo
   .time-calculator__checkbox-detail {
     font-size: var(--font-size-sm);
     color: var(--text-secondary);
-    font-weight: 400;
+    font-weight: 500;
     font-style: italic;
+    opacity: 0.9;
   }
 
   /* Result Display */
   .time-calculator__result {
-    background: linear-gradient(135deg, rgba(64, 224, 208, 0.12), rgba(127, 255, 212, 0.06));
-    border: 2px solid var(--primary-aqua-light);
-    border-radius: var(--radius-lg);
-    padding: var(--space-lg);
+    background: linear-gradient(135deg, rgba(0, 206, 209, 0.18), rgba(72, 209, 204, 0.1));
+    border: none;
+    border-radius: var(--radius-xl);
+    padding: var(--space-2xl);
     text-align: center;
     position: relative;
     overflow: hidden;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 16px 32px rgba(0, 206, 209, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3);
     transition: all var(--transition-normal);
   }
 
   .time-calculator__result:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-1px);
+    box-shadow: 0 20px 40px rgba(0, 206, 209, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px);
   }
 
   .time-calculator__result::before {
@@ -292,7 +307,7 @@ const hasValidAnime = anime && typeof anime.episodes === 'number' && anime.episo
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(64, 224, 208, 0.1), transparent);
+    background: linear-gradient(90deg, transparent, rgba(0, 206, 209, 0.15), transparent);
     transition: left var(--transition-slow);
   }
 
@@ -305,23 +320,26 @@ const hasValidAnime = anime && typeof anime.episodes === 'number' && anime.episo
   }
 
   .time-calculator__result-label {
-    font-size: var(--font-size-sm);
-    font-weight: 500;
-    color: var(--text-secondary);
+    font-size: var(--font-size-base);
+    font-weight: 700;
+    color: var(--text-primary);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
+    opacity: 0.9;
   }
 
   .time-calculator__result-value {
-    font-size: var(--font-size-3xl);
-    font-weight: 700;
-    color: var(--primary-aqua-dark);
-    margin-bottom: var(--space-md);
-    min-height: 3rem;
+    font-size: var(--font-size-5xl);
+    font-weight: 900;
+    color: var(--text-primary);
+    margin-bottom: var(--space-xl);
+    min-height: 5rem;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
+    text-shadow: 0 4px 8px rgba(0, 206, 209, 0.3);
+    line-height: 1;
   }
 
   .time-calculator__calculating {
@@ -366,36 +384,52 @@ const hasValidAnime = anime && typeof anime.episodes === 'number' && anime.episo
   }
 
   .time-calculator__breakdown-label {
-    font-weight: 500;
+    font-weight: 600;
+    color: var(--text-primary);
+    opacity: 0.9;
   }
 
   .time-calculator__breakdown-value {
-    font-weight: 600;
+    font-weight: 800;
     color: var(--text-primary);
+    font-size: var(--font-size-xl);
   }
 
   /* Responsive Design */
   @media (max-width: 767px) {
     .time-calculator__content {
-      padding: var(--space-lg);
+      padding: var(--space-xl);
+    }
+
+    .time-calculator__title {
+      font-size: var(--font-size-xl);
     }
 
     .time-calculator__checkbox-label {
-      padding: var(--space-sm);
+      padding: var(--space-lg);
     }
 
     .time-calculator__checkbox-text {
-      font-size: var(--font-size-sm);
+      font-size: var(--font-size-base);
+    }
+
+    .time-calculator__result {
+      padding: var(--space-xl);
     }
 
     .time-calculator__result-value {
-      font-size: var(--font-size-2xl);
+      font-size: var(--font-size-3xl);
+      min-height: 3.5rem;
     }
 
     .time-calculator__breakdown-item {
       flex-direction: column;
       align-items: flex-start;
       gap: var(--space-xs);
+    }
+
+    .time-calculator__breakdown-value {
+      font-size: var(--font-size-lg);
     }
   }
 
@@ -520,16 +554,16 @@ const hasValidAnime = anime && typeof anime.episodes === 'number' && anime.episo
             <span class="time-calculator__breakdown-label">Base Time (${breakdown.episodes} episodes × ${breakdown.episodeDuration} min)</span>
             <span class="time-calculator__breakdown-value">${breakdown.baseTime}</span>
           </div>
-          ${breakdown.includeOpening ? `
+          ${!breakdown.includeOpening ? `
             <div class="time-calculator__breakdown-item">
-              <span class="time-calculator__breakdown-label">Opening Themes (${breakdown.episodes} × 1m 30s)</span>
-              <span class="time-calculator__breakdown-value">${breakdown.openingTime}</span>
+              <span class="time-calculator__breakdown-label">Time Saved by Skipping Openings (${breakdown.episodes} × 1m 30s)</span>
+              <span class="time-calculator__breakdown-value">-${breakdown.openingTime}</span>
             </div>
           ` : ''}
-          ${breakdown.includeEnding ? `
+          ${!breakdown.includeEnding ? `
             <div class="time-calculator__breakdown-item">
-              <span class="time-calculator__breakdown-label">Ending Themes (${breakdown.episodes} × 1m 30s)</span>
-              <span class="time-calculator__breakdown-value">${breakdown.endingTime}</span>
+              <span class="time-calculator__breakdown-label">Time Saved by Skipping Endings (${breakdown.episodes} × 1m 30s)</span>
+              <span class="time-calculator__breakdown-value">-${breakdown.endingTime}</span>
             </div>
           ` : ''}
           <div class="time-calculator__breakdown-item">
@@ -723,19 +757,19 @@ const hasValidAnime = anime && typeof anime.episodes === 'number' && anime.episo
               <span class="time-calculator__breakdown-value">${breakdown.baseTime}</span>
             </div>`;
           
-          if (breakdown.includeOpening) {
+          if (!breakdown.includeOpening) {
             breakdownHTML += `
               <div class="time-calculator__breakdown-item">
-                <span class="time-calculator__breakdown-label">Opening Themes (${breakdown.episodes} × 1m 30s)</span>
-                <span class="time-calculator__breakdown-value">${breakdown.openingTime}</span>
+                <span class="time-calculator__breakdown-label">Time Saved by Skipping Openings (${breakdown.episodes} × 1m 30s)</span>
+                <span class="time-calculator__breakdown-value">-${breakdown.openingTime}</span>
               </div>`;
           }
           
-          if (breakdown.includeEnding) {
+          if (!breakdown.includeEnding) {
             breakdownHTML += `
               <div class="time-calculator__breakdown-item">
-                <span class="time-calculator__breakdown-label">Ending Themes (${breakdown.episodes} × 1m 30s)</span>
-                <span class="time-calculator__breakdown-value">${breakdown.endingTime}</span>
+                <span class="time-calculator__breakdown-label">Time Saved by Skipping Endings (${breakdown.episodes} × 1m 30s)</span>
+                <span class="time-calculator__breakdown-value">-${breakdown.endingTime}</span>
               </div>`;
           }
           

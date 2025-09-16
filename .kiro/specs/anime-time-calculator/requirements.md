@@ -47,11 +47,12 @@ The Anime Time Calculator is a single-page web application built with Astro that
 
 #### Acceptance Criteria
 
-1. WHEN the page loads THEN the system SHALL display two checkboxes for "Include Opening" and "Include Ending"
-2. WHEN the "Include Opening" checkbox is checked THEN the system SHALL add 1 minute 30 seconds per episode to the calculation
-3. WHEN the "Include Ending" checkbox is checked THEN the system SHALL add 1 minute 30 seconds per episode to the calculation
+1. WHEN the page loads THEN the system SHALL display two checkboxes for "Watch Opening Themes" and "Watch Ending Themes" (both checked by default)
+2. WHEN the "Watch Opening Themes" checkbox is unchecked THEN the system SHALL subtract 1 minute 30 seconds per episode from the calculation
+3. WHEN the "Watch Ending Themes" checkbox is unchecked THEN the system SHALL subtract 1 minute 30 seconds per episode from the calculation
 4. WHEN either checkbox state changes THEN the system SHALL recalculate and update the total time immediately
-5. WHEN both checkboxes are unchecked THEN the system SHALL calculate time using only the base episode duration
+5. WHEN both checkboxes are checked THEN the system SHALL use the full episode duration (as OP/ED are included in API duration)
+6. WHEN checkboxes are unchecked THEN the system SHALL show time saved in the breakdown display
 
 ### Requirement 5
 

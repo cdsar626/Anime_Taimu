@@ -148,14 +148,15 @@ export function calculateWatchTime(options) {
     : DEFAULT_EPISODE_DURATION;
 
   // Calculate base time (episodes * duration per episode)
+  // Note: API duration already includes OP/ED, so we subtract when NOT including them
   const baseMinutes = episodes * finalEpisodeDuration;
 
-  // Calculate additional time from opening and ending themes
-  const openingMinutes = includeOpening ? episodes * OPENING_THEME_DURATION : 0;
-  const endingMinutes = includeEnding ? episodes * ENDING_THEME_DURATION : 0;
+  // Calculate time to subtract when NOT including opening and ending themes
+  const openingMinutes = includeOpening ? 0 : episodes * OPENING_THEME_DURATION;
+  const endingMinutes = includeEnding ? 0 : episodes * ENDING_THEME_DURATION;
 
-  // Calculate total time
-  const totalMinutes = baseMinutes + openingMinutes + endingMinutes;
+  // Calculate total time (subtract OP/ED time when not including them)
+  const totalMinutes = baseMinutes - openingMinutes - endingMinutes;
 
   // Format the result
   const formattedTime = formatTime(totalMinutes);
@@ -165,8 +166,8 @@ export function calculateWatchTime(options) {
     episodes,
     episodeDuration: finalEpisodeDuration,
     baseTime: formatTime(baseMinutes),
-    openingTime: includeOpening ? formatTime(openingMinutes) : null,
-    endingTime: includeEnding ? formatTime(endingMinutes) : null,
+    openingTime: includeOpening ? null : formatTime(openingMinutes),
+    endingTime: includeEnding ? null : formatTime(endingMinutes),
     includeOpening,
     includeEnding
   };
@@ -190,8 +191,8 @@ export function createTimeCalculator(initialOptions = {}) {
   let currentOptions = {
     episodes: 0,
     episodeDuration: DEFAULT_EPISODE_DURATION,
-    includeOpening: false,
-    includeEnding: false,
+    includeOpening: true,
+    includeEnding: true,
     ...initialOptions
   };
 
@@ -331,8 +332,8 @@ export function createTimeCalculator(initialOptions = {}) {
       currentOptions = {
         episodes: 0,
         episodeDuration: DEFAULT_EPISODE_DURATION,
-        includeOpening: false,
-        includeEnding: false
+        includeOpening: true,
+        includeEnding: true
       };
       currentResult = null;
       
