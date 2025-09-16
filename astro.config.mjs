@@ -10,6 +10,11 @@ export default defineConfig({
   vite: {
     css: {
       devSourcemap: true
+    },
+    build: {
+      rollupOptions: {
+        external: ['vitest']
+      }
     }
   }
 });

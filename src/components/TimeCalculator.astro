@@ -136,8 +136,9 @@ const hasValidAnime = anime && typeof anime.episodes === 'number' && anime.episo
   }
 
   .time-calculator__content:hover {
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg), var(--shadow-glow-soft);
+    transform: translateY(-3px);
+    background: var(--surface-elevated);
   }
 
   .time-calculator__header {
@@ -188,9 +189,14 @@ const hasValidAnime = anime && typeof anime.episodes === 'number' && anime.episo
   }
 
   .time-calculator__checkbox-label:hover {
-    background: rgba(64, 224, 208, 0.08);
+    background: var(--interactive-hover);
     border-color: var(--primary-aqua-light);
-    transform: translateX(4px);
+    transform: translateX(6px);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .time-calculator__checkbox-label:active {
+    transform: translateX(2px);
   }
 
   .time-calculator__checkbox-label:focus-within {
@@ -231,9 +237,9 @@ const hasValidAnime = anime && typeof anime.episodes === 'number' && anime.episo
   }
 
   .time-calculator__checkbox:checked + .time-calculator__checkbox-custom {
-    background: rgba(64, 224, 208, 0.1);
+    background: var(--interactive-active);
     border-color: var(--primary-aqua);
-    box-shadow: 0 0 0 3px rgba(64, 224, 208, 0.2);
+    box-shadow: 0 0 0 3px var(--interactive-focus), var(--shadow-glow-soft);
   }
 
   .time-calculator__checkbox:checked + .time-calculator__checkbox-custom::after {
@@ -263,13 +269,20 @@ const hasValidAnime = anime && typeof anime.episodes === 'number' && anime.episo
 
   /* Result Display */
   .time-calculator__result {
-    background: linear-gradient(135deg, rgba(64, 224, 208, 0.1), rgba(127, 255, 212, 0.05));
+    background: linear-gradient(135deg, rgba(64, 224, 208, 0.12), rgba(127, 255, 212, 0.06));
     border: 2px solid var(--primary-aqua-light);
     border-radius: var(--radius-lg);
     padding: var(--space-lg);
     text-align: center;
     position: relative;
     overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-normal);
+  }
+
+  .time-calculator__result:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
   }
 
   .time-calculator__result::before {
@@ -704,28 +717,35 @@ const hasValidAnime = anime && typeof anime.episodes === 'number' && anime.episo
 
           // Update breakdown
           const breakdown = result.breakdown;
-          breakdownElement.innerHTML = \`
+          let breakdownHTML = `
             <div class="time-calculator__breakdown-item">
-              <span class="time-calculator__breakdown-label">Base Time (\${breakdown.episodes} episodes × \${breakdown.episodeDuration} min)</span>
-              <span class="time-calculator__breakdown-value">\${breakdown.baseTime}</span>
-            </div>
-            \${breakdown.includeOpening ? \`
+              <span class="time-calculator__breakdown-label">Base Time (${breakdown.episodes} episodes × ${breakdown.episodeDuration} min)</span>
+              <span class="time-calculator__breakdown-value">${breakdown.baseTime}</span>
+            </div>`;
+          
+          if (breakdown.includeOpening) {
+            breakdownHTML += `
               <div class="time-calculator__breakdown-item">
-                <span class="time-calculator__breakdown-label">Opening Themes (\${breakdown.episodes} × 1m 30s)</span>
-                <span class="time-calculator__breakdown-value">\${breakdown.openingTime}</span>
-              </div>
-            \` : ''}
-            \${breakdown.includeEnding ? \`
+                <span class="time-calculator__breakdown-label">Opening Themes (${breakdown.episodes} × 1m 30s)</span>
+                <span class="time-calculator__breakdown-value">${breakdown.openingTime}</span>
+              </div>`;
+          }
+          
+          if (breakdown.includeEnding) {
+            breakdownHTML += `
               <div class="time-calculator__breakdown-item">
-                <span class="time-calculator__breakdown-label">Ending Themes (\${breakdown.episodes} × 1m 30s)</span>
-                <span class="time-calculator__breakdown-value">\${breakdown.endingTime}</span>
-              </div>
-            \` : ''}
+                <span class="time-calculator__breakdown-label">Ending Themes (${breakdown.episodes} × 1m 30s)</span>
+                <span class="time-calculator__breakdown-value">${breakdown.endingTime}</span>
+              </div>`;
+          }
+          
+          breakdownHTML += `
             <div class="time-calculator__breakdown-item">
               <span class="time-calculator__breakdown-label">Total Watch Time</span>
-              <span class="time-calculator__breakdown-value">\${result.formattedTime}</span>
-            </div>
-          \`;
+              <span class="time-calculator__breakdown-value">${result.formattedTime}</span>
+            </div>`;
+          
+          breakdownElement.innerHTML = breakdownHTML;
 
           breakdownElement.classList.add('visible');
           resultElement?.classList.remove('updating');

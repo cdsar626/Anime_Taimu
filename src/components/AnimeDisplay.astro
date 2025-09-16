@@ -188,8 +188,12 @@ const { anime, isLoading = false, error = null } = Astro.props;
   }
 
   .anime-display__cover-container:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-xl);
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: var(--shadow-xl), var(--shadow-glow-soft);
+  }
+
+  .anime-display__cover-container:active {
+    transform: translateY(-2px) scale(1.01);
   }
 
   .anime-display__cover {
@@ -262,9 +266,33 @@ const { anime, isLoading = false, error = null } = Astro.props;
     gap: var(--space-md);
     margin: var(--space-lg) 0;
     padding: var(--space-md);
-    background: rgba(64, 224, 208, 0.05);
+    background: linear-gradient(135deg, rgba(64, 224, 208, 0.08), rgba(127, 255, 212, 0.04));
     border: 2px solid var(--primary-aqua-light);
     border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .anime-display__episode-info::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(64, 224, 208, 0.1), transparent);
+    transition: left var(--transition-slow);
+  }
+
+  .anime-display__episode-info:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .anime-display__episode-info:hover::before {
+    left: 100%;
   }
 
   .anime-display__episode-count,
@@ -313,7 +341,24 @@ const { anime, isLoading = false, error = null } = Astro.props;
     font-size: var(--font-size-sm);
     font-weight: 500;
     color: var(--primary-aqua-dark);
-    transition: all var(--transition-fast);
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .anime-display__status::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(64, 224, 208, 0.2), transparent);
+    transition: left var(--transition-slow);
+  }
+
+  .anime-display__status:hover::before {
+    left: 100%;
   }
 
   .anime-display__status[data-status="finished"] {

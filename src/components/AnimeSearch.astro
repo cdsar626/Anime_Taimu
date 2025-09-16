@@ -101,13 +101,16 @@
 
   .search-input:focus {
     border-color: var(--primary-aqua);
-    box-shadow: 0 0 0 3px var(--shadow), var(--shadow-md);
-    transform: translateY(-1px);
+    box-shadow: 0 0 0 3px var(--interactive-focus), var(--shadow-md);
+    transform: translateY(-2px);
+    background: var(--surface-elevated);
   }
 
   .search-input:hover:not(:focus) {
     border-color: var(--primary-aqua);
     box-shadow: var(--shadow-md);
+    background: var(--surface-hover);
+    transform: translateY(-1px);
   }
 
   .search-icon {
@@ -139,7 +142,13 @@
 
   .clear-button:hover {
     color: var(--error);
-    background: rgba(255, 107, 107, 0.1);
+    background: var(--error-light);
+    transform: scale(1.1);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .clear-button:active {
+    transform: scale(0.95);
   }
 
   .clear-button:focus {
@@ -157,11 +166,13 @@
     align-items: center;
     gap: var(--space-sm);
     padding: var(--space-md);
-    background: rgba(64, 224, 208, 0.05);
-    border: 1px solid var(--primary-aqua-light);
+    background: linear-gradient(135deg, rgba(64, 224, 208, 0.08), rgba(127, 255, 212, 0.04));
+    border: 2px solid var(--primary-aqua-light);
     border-radius: var(--radius-md);
     color: var(--primary-aqua-dark);
     font-weight: 500;
+    box-shadow: var(--shadow-sm);
+    animation: pulse 2s ease-in-out infinite;
   }
 
   .loading-spinner {
@@ -183,10 +194,12 @@
     align-items: center;
     gap: var(--space-sm);
     padding: var(--space-md);
-    background: rgba(255, 107, 107, 0.05);
-    border: 1px solid rgba(255, 107, 107, 0.2);
+    background: var(--error-light);
+    border: 2px solid rgba(255, 107, 107, 0.3);
     border-radius: var(--radius-md);
     color: var(--error);
+    box-shadow: var(--shadow-sm);
+    animation: slideDown var(--transition-normal) ease-out;
   }
 
   .error-icon {

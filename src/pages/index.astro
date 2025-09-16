@@ -101,12 +101,25 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 				background: var(--background);
 			}
 
-			/* Header Styles */
+			/* Enhanced Header Styles */
 			.app-header {
 				padding: var(--space-xl) var(--space-lg);
 				text-align: center;
-				background: linear-gradient(135deg, rgba(64, 224, 208, 0.05), rgba(127, 255, 212, 0.02));
-				border-bottom: 1px solid rgba(64, 224, 208, 0.1);
+				background: linear-gradient(135deg, rgba(64, 224, 208, 0.08), rgba(127, 255, 212, 0.03));
+				border-bottom: 1px solid rgba(64, 224, 208, 0.15);
+				position: relative;
+				overflow: hidden;
+			}
+
+			.app-header::before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: -100%;
+				width: 100%;
+				height: 100%;
+				background: linear-gradient(90deg, transparent, rgba(64, 224, 208, 0.05), transparent);
+				animation: shimmer 3s ease-in-out infinite;
 			}
 
 			.header-content {
@@ -119,13 +132,33 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 				font-weight: 700;
 				margin: 0 0 var(--space-md) 0;
 				line-height: 1.1;
+				position: relative;
+				z-index: 1;
 			}
 
 			.title-gradient {
-				background: linear-gradient(135deg, var(--primary-aqua), var(--primary-aqua-dark));
+				background: linear-gradient(135deg, var(--primary-aqua), var(--primary-aqua-dark), var(--primary-aqua-darker));
+				background-size: 200% 200%;
 				-webkit-background-clip: text;
 				-webkit-text-fill-color: transparent;
 				background-clip: text;
+				animation: gradientShift 4s ease-in-out infinite;
+				position: relative;
+			}
+
+			.title-gradient::after {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background: linear-gradient(135deg, var(--primary-aqua-light), var(--primary-aqua));
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				background-clip: text;
+				opacity: 0;
+				transition: opacity var(--transition-slow);
 			}
 
 			.app-subtitle {
@@ -174,8 +207,12 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 				transform: translateY(0);
 			}
 
+			.content-grid.visible .anime-section {
+				transition-delay: 0.1s;
+			}
+
 			.content-grid.visible .calculator-section {
-				transition-delay: 0.2s;
+				transition-delay: 0.3s;
 			}
 
 			/* Empty State Styles */
@@ -216,12 +253,13 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 				line-height: 1.6;
 			}
 
-			/* Footer Styles */
+			/* Enhanced Footer Styles */
 			.app-footer {
 				padding: var(--space-lg);
 				text-align: center;
-				border-top: 1px solid rgba(64, 224, 208, 0.1);
-				background: rgba(64, 224, 208, 0.02);
+				border-top: 1px solid rgba(64, 224, 208, 0.15);
+				background: linear-gradient(135deg, rgba(64, 224, 208, 0.03), rgba(127, 255, 212, 0.01));
+				position: relative;
 			}
 
 			.footer-content {
@@ -239,12 +277,32 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 				color: var(--primary-aqua-dark);
 				text-decoration: none;
 				font-weight: 500;
-				transition: color var(--transition-fast);
+				transition: all var(--transition-normal);
+				position: relative;
+				padding: var(--space-xs) var(--space-sm);
+				border-radius: var(--radius-sm);
+			}
+
+			.footer-link::before {
+				content: '';
+				position: absolute;
+				bottom: 0;
+				left: 50%;
+				width: 0;
+				height: 2px;
+				background: linear-gradient(90deg, var(--primary-aqua), var(--primary-aqua-light));
+				transition: all var(--transition-normal);
+				transform: translateX(-50%);
 			}
 
 			.footer-link:hover {
 				color: var(--primary-aqua);
-				text-decoration: underline;
+				background: var(--interactive-hover);
+				transform: translateY(-1px);
+			}
+
+			.footer-link:hover::before {
+				width: 100%;
 			}
 
 			/* Responsive Design */
@@ -299,6 +357,17 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 				}
 			}
 
+			/* New Keyframe Animations */
+			@keyframes shimmer {
+				0% { left: -100%; }
+				100% { left: 100%; }
+			}
+
+			@keyframes gradientShift {
+				0%, 100% { background-position: 0% 50%; }
+				50% { background-position: 100% 50%; }
+			}
+
 			/* Reduced Motion */
 			@media (prefers-reduced-motion: reduce) {
 				.animate-fade-in,
@@ -310,6 +379,11 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 				.content-grid.visible .anime-section,
 				.content-grid.visible .calculator-section {
 					transition: none;
+				}
+
+				.app-header::before,
+				.title-gradient {
+					animation: none;
 				}
 			}
 
