@@ -47,26 +47,28 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 			
 			<!-- Main Content -->
 			<main class="app-main">
-				<!-- Content Grid - Anime Display and Time Calculator -->
-				<div class="content-grid" id="content-grid">
-					<!-- Anime Display Section -->
-					<section class="anime-section" id="anime-section">
-						<AnimeDisplay />
-					</section>
+				<!-- Two Column Layout -->
+				<div class="main-layout" id="main-layout">
+					<!-- Left Column: Anime Info + Search -->
+					<div class="left-column">
+						<!-- Search Section -->
+						<section class="search-section animate-scale-in">
+							<AnimeSearch />
+						</section>
+						
+						<!-- Anime Display Section -->
+						<section class="anime-section" id="anime-section">
+							<AnimeDisplay />
+						</section>
+					</div>
 					
-					<!-- Time Calculator Section -->
-					<section class="calculator-section" id="calculator-section">
-						<TimeCalculator />
-					</section>
-
+					<!-- Right Column: Calculator -->
+					<div class="right-column">
+						<section class="calculator-section" id="calculator-section">
+							<TimeCalculator />
+						</section>
+					</div>
 				</div>
-				
-				<!-- Search Section - Now Below -->
-				<section class="search-section animate-scale-in">
-					<AnimeSearch />
-				</section>
-				
-
 			</main>
 			
 			<!-- Footer -->
@@ -163,21 +165,33 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 				width: 100%;
 			}
 
-			.search-section {
-				margin-top: var(--space-sm);
-				margin-bottom: var(--space-sm);
-			}
-
-			.content-grid {
-				display: flex;
-				flex-direction: column;
-				gap: var(--space-sm);
-				margin-bottom: var(--space-sm);
+			/* Two Column Layout */
+			.main-layout {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: var(--space-xl);
+				min-height: 70vh;
 				opacity: 1;
 			}
 
-			.content-grid.visible {
+			.main-layout.visible {
 				animation: fadeIn var(--transition-slow) ease-out;
+			}
+
+			.left-column {
+				display: flex;
+				flex-direction: column;
+				gap: var(--space-lg);
+			}
+
+			.right-column {
+				display: flex;
+				flex-direction: column;
+				justify-content: flex-start;
+			}
+
+			.search-section {
+				margin: 0;
 			}
 
 			.anime-section {
@@ -186,14 +200,15 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 				transition: all var(--transition-slow);
 				display: flex;
 				justify-content: center;
+				flex: 1;
 			}
 
 			.calculator-section {
 				opacity: 1;
 				transform: translateY(0);
 				transition: all var(--transition-slow);
-				max-width: 800px;
-				margin: 0 auto;
+				position: sticky;
+				top: var(--space-lg);
 			}
 
 			/* Empty State Styles */
@@ -307,6 +322,19 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 					padding: var(--space-lg) var(--space-md);
 				}
 
+				.main-layout {
+					grid-template-columns: 1fr;
+					gap: var(--space-lg);
+				}
+
+				.left-column {
+					gap: var(--space-md);
+				}
+
+				.calculator-section {
+					position: static;
+				}
+
 				.empty-state-title {
 					font-size: var(--font-size-2xl);
 				}
@@ -321,8 +349,8 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 					padding: var(--space-3xl) var(--space-lg);
 				}
 
-				.content-grid {
-					gap: var(--space-3xl);
+				.main-layout {
+					gap: var(--space-xl);
 				}
 
 				.empty-state {
@@ -338,12 +366,11 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 					padding: var(--space-xl) var(--space-lg);
 				}
 
-				.search-section {
-					margin-top: var(--space-xl);
-					margin-bottom: var(--space-lg);
+				.main-layout {
+					gap: var(--space-2xl);
 				}
 
-				.content-grid {
+				.left-column {
 					gap: var(--space-xl);
 				}
 			}
@@ -380,8 +407,8 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 					animation: none;
 				}
 
-				.content-grid.visible .anime-section,
-				.content-grid.visible .calculator-section {
+				.main-layout.visible .anime-section,
+				.main-layout.visible .calculator-section {
 					transition: none;
 				}
 
@@ -418,7 +445,7 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 					this.error = null;
 					
 					// Get DOM elements
-					this.contentGrid = document.getElementById('content-grid');
+					this.mainLayout = document.getElementById('main-layout');
 					this.animeSection = document.getElementById('anime-section');
 					this.calculatorSection = document.getElementById('calculator-section');
 					
@@ -453,8 +480,8 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 					// Update time calculator component
 					this.updateTimeCalculator(animeData);
 					
-					// Show content grid
-					this.showContentGrid();
+					// Show main layout
+					this.showMainLayout();
 					
 					// Preload anime image for better UX
 					if (window.preloadAnimeImage && animeData.coverImage.large) {
@@ -473,8 +500,8 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 					// Update time calculator with no data
 					this.updateTimeCalculator(null);
 					
-					// Show content grid to display error
-					this.showContentGrid();
+					// Show main layout to display error
+					this.showMainLayout();
 				}
 
 				setLoading(loading) {
@@ -484,13 +511,13 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 						// Update anime display with loading state
 						this.updateAnimeDisplay(null, true, null);
 						
-						// Show content grid
-						this.showContentGrid();
+						// Show main layout
+						this.showMainLayout();
 					}
 				}
 
-				showContentGrid() {
-					// Content grid is always visible now - AnimeDisplay handles its own states
+				showMainLayout() {
+					// Main layout is always visible now - AnimeDisplay handles its own states
 				}
 
 				updateAnimeDisplay(anime, isLoading, error) {
@@ -554,9 +581,9 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 			document.addEventListener('animeSearchResult', (event) => {
 				if (event.detail.data) {
 					setTimeout(() => {
-						const contentGrid = document.getElementById('content-grid');
-						if (contentGrid) {
-							contentGrid.scrollIntoView({ 
+						const mainLayout = document.getElementById('main-layout');
+						if (mainLayout) {
+							mainLayout.scrollIntoView({ 
 								behavior: 'smooth', 
 								block: 'start' 
 							});
