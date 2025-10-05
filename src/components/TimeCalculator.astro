@@ -27,71 +27,70 @@ const hasValidAnime = anime && typeof anime.episodes === 'number' && anime.episo
 ---
 
 <div class="time-calculator" data-testid="time-calculator">
-  {hasValidAnime ? (
-    <div class="time-calculator__content animate-fade-in">
-      <div class="time-calculator__header">
-        <h3 class="time-calculator__title">Watch Time Calculator</h3>
-        <p class="time-calculator__subtitle">Customize your viewing experience</p>
-      </div>
+  <!-- Always render both states, JavaScript will toggle visibility -->
+  <div class="time-calculator__content animate-fade-in" id="calculator-content" style="display: none;">
+    <div class="time-calculator__header">
+      <h3 class="time-calculator__title">Watch Time Calculator</h3>
+      <p class="time-calculator__subtitle">Customize your viewing experience</p>
+    </div>
 
-      <div class="time-calculator__controls">
-        <div class="time-calculator__checkbox-group">
-          <label class="time-calculator__checkbox-label">
-            <input
-              type="checkbox"
-              class="time-calculator__checkbox"
-              id="include-opening"
-              data-testid="include-opening"
-              checked={initialIncludeOpening !== undefined ? initialIncludeOpening : true}
-            />
-            <span class="time-calculator__checkbox-custom"></span>
-            <span class="time-calculator__checkbox-text">
-              Watch Opening Themes
-              <span class="time-calculator__checkbox-detail">(uncheck to skip and save 1m 30s per episode)</span>
-            </span>
-          </label>
+    <div class="time-calculator__controls">
+      <div class="time-calculator__checkbox-group">
+        <label class="time-calculator__checkbox-label">
+          <input
+            type="checkbox"
+            class="time-calculator__checkbox"
+            id="include-opening"
+            data-testid="include-opening"
+            checked={initialIncludeOpening !== undefined ? initialIncludeOpening : true}
+          />
+          <span class="time-calculator__checkbox-custom"></span>
+          <span class="time-calculator__checkbox-text">
+            Watch Opening Themes
+            <span class="time-calculator__checkbox-detail">(uncheck to skip and save 1m 30s per episode)</span>
+          </span>
+        </label>
 
-          <label class="time-calculator__checkbox-label">
-            <input
-              type="checkbox"
-              class="time-calculator__checkbox"
-              id="include-ending"
-              data-testid="include-ending"
-              checked={initialIncludeEnding !== undefined ? initialIncludeEnding : true}
-            />
-            <span class="time-calculator__checkbox-custom"></span>
-            <span class="time-calculator__checkbox-text">
-              Watch Ending Themes
-              <span class="time-calculator__checkbox-detail">(uncheck to skip and save 1m 30s per episode)</span>
-            </span>
-          </label>
-        </div>
-      </div>
-
-      <div class="time-calculator__result" data-testid="calculation-result">
-        <div class="time-calculator__result-header">
-          <span class="time-calculator__result-label">Total Watch Time</span>
-        </div>
-        <div class="time-calculator__result-value" id="total-time">
-          <span class="time-calculator__calculating">Calculating...</span>
-        </div>
-        <div class="time-calculator__result-breakdown" id="time-breakdown">
-          <!-- Breakdown will be populated by JavaScript -->
-        </div>
+        <label class="time-calculator__checkbox-label">
+          <input
+            type="checkbox"
+            class="time-calculator__checkbox"
+            id="include-ending"
+            data-testid="include-ending"
+            checked={initialIncludeEnding !== undefined ? initialIncludeEnding : true}
+          />
+          <span class="time-calculator__checkbox-custom"></span>
+          <span class="time-calculator__checkbox-text">
+            Watch Ending Themes
+            <span class="time-calculator__checkbox-detail">(uncheck to skip and save 1m 30s per episode)</span>
+          </span>
+        </label>
       </div>
     </div>
-  ) : (
-    <div class="time-calculator__empty">
-      <div class="time-calculator__empty-icon">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="currentColor"/>
-        </svg>
+
+    <div class="time-calculator__result" data-testid="calculation-result">
+      <div class="time-calculator__result-header">
+        <span class="time-calculator__result-label">Total Watch Time</span>
       </div>
-      <p class="time-calculator__empty-message">
-        Search for an anime to calculate watch time
-      </p>
+      <div class="time-calculator__result-value" id="total-time">
+        <span class="time-calculator__calculating">Calculating...</span>
+      </div>
+      <div class="time-calculator__result-breakdown" id="time-breakdown">
+        <!-- Breakdown will be populated by JavaScript -->
+      </div>
     </div>
-  )}
+  </div>
+
+  <div class="time-calculator__empty" id="calculator-empty">
+    <div class="time-calculator__empty-icon">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="currentColor"/>
+      </svg>
+    </div>
+    <p class="time-calculator__empty-message">
+      Search for an anime to calculate watch time
+    </p>
+  </div>
 </div>
 
 <style>
@@ -185,8 +184,6 @@ const hasValidAnime = anime && typeof anime.episodes === 'number' && anime.episo
     opacity: 0;
     transition: opacity var(--transition-normal);
   }
-
-
 
   .time-calculator__content:hover {
     box-shadow: 
@@ -408,9 +405,6 @@ const hasValidAnime = anime && typeof anime.episodes === 'number' && anime.episo
     display: flex;
     flex-direction: column;
     gap: var(--space-xs);
-  }
-
-  .time-calculator__checkbox-text {
     font-size: var(--font-size-base);
     font-weight: 700;
     color: var(--text-primary);
@@ -660,6 +654,34 @@ const hasValidAnime = anime && typeof anime.episodes === 'number' && anime.episo
     text-shadow: 0 1px 2px rgba(0, 206, 209, 0.3);
   }
 
+  /* Animations */
+  @keyframes float {
+    0%, 100% {
+      transform: translateX(-50%) translateY(0px);
+    }
+    50% {
+      transform: translateX(-50%) translateY(-8px);
+    }
+  }
+
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 0.8;
+    }
+    50% {
+      opacity: 0.4;
+    }
+  }
+
   /* Responsive Design */
   @media (max-width: 767px) {
     .time-calculator__content {
@@ -742,108 +764,38 @@ const hasValidAnime = anime && typeof anime.episodes === 'number' && anime.episo
     outline: 2px solid var(--primary-aqua);
     outline-offset: 2px;
   }
-
-  /* Enhanced Animations */
-  @keyframes checkboxToggle {
-    0% {
-      transform: translate(-50%, -50%) scale(0) rotate(-180deg);
-      opacity: 0;
-    }
-    50% {
-      transform: translate(-50%, -50%) scale(1.3) rotate(0deg);
-      opacity: 0.8;
-    }
-    100% {
-      transform: translate(-50%, -50%) scale(1) rotate(0deg);
-      opacity: 1;
-    }
-  }
-
-  @keyframes float {
-    0%, 100% {
-      transform: translateX(-50%) translateY(0px);
-    }
-    50% {
-      transform: translateX(-50%) translateY(-8px);
-    }
-  }
-
-  @keyframes rotate {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  @keyframes shimmer {
-    0% {
-      background-position: -200% 0;
-    }
-    100% {
-      background-position: 200% 0;
-    }
-  }
-
-  @keyframes glow {
-    0%, 100% {
-      box-shadow: 
-        0 16px 32px rgba(0, 206, 209, 0.3),
-        0 8px 16px rgba(0, 0, 0, 0.1),
-        inset 0 2px 0 rgba(255, 255, 255, 0.4),
-        inset 0 -2px 0 rgba(0, 206, 209, 0.2);
-    }
-    50% {
-      box-shadow: 
-        0 20px 40px rgba(0, 206, 209, 0.4),
-        0 10px 20px rgba(0, 0, 0, 0.15),
-        inset 0 2px 0 rgba(255, 255, 255, 0.5),
-        inset 0 -2px 0 rgba(0, 206, 209, 0.3);
-    }
-  }
-
-  .time-calculator__checkbox:checked + .time-calculator__checkbox-custom::after {
-    animation: checkboxToggle 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  }
-
-  .time-calculator__result {
-    animation: glow 4s ease-in-out infinite;
-  }
 </style>
 
 <script>
   import { createTimeCalculator } from '../scripts/time-calculator.js';
 
+  // Global calculator instance
+  let globalCalculator = null;
+
   // Initialize the time calculator when the component loads
-  document.addEventListener('DOMContentLoaded', () => {
+  function initializeTimeCalculator() {
     const calculatorElement = document.querySelector('.time-calculator');
     if (!calculatorElement) return;
 
-    const animeData = calculatorElement.dataset.anime ? JSON.parse(calculatorElement.dataset.anime) : null;
-    const hasValidAnime = animeData && typeof animeData.episodes === 'number' && animeData.episodes > 0;
-
-    if (!hasValidAnime) return;
-
     // Get DOM elements
-    const openingCheckbox = document.getElementById('include-opening') as HTMLInputElement;
-    const endingCheckbox = document.getElementById('include-ending') as HTMLInputElement;
+    const openingCheckbox = document.getElementById('include-opening');
+    const endingCheckbox = document.getElementById('include-ending');
     const totalTimeElement = document.getElementById('total-time');
     const breakdownElement = document.getElementById('time-breakdown');
     const resultElement = document.querySelector('.time-calculator__result');
 
     if (!openingCheckbox || !endingCheckbox || !totalTimeElement || !breakdownElement) return;
 
-    // Create time calculator instance
-    const calculator = createTimeCalculator({
-      episodes: animeData.episodes,
-      episodeDuration: animeData.duration || 24,
+    // Create time calculator instance (initially with no data)
+    globalCalculator = createTimeCalculator({
+      episodes: 0,
+      episodeDuration: 24,
       includeOpening: openingCheckbox.checked,
       includeEnding: endingCheckbox.checked
     });
 
     // Update display function
-    function updateDisplay(result: any, options: any, error?: string) {
+    function updateDisplay(result, options, error) {
       if (error) {
         totalTimeElement.innerHTML = '<span class="time-calculator__error">Error calculating time</span>';
         breakdownElement.classList.remove('visible');
@@ -894,15 +846,15 @@ const hasValidAnime = anime && typeof anime.episodes === 'number' && anime.episo
     }
 
     // Add change listener
-    calculator.addChangeListener(updateDisplay);
+    globalCalculator.addChangeListener(updateDisplay);
 
     // Handle checkbox changes
     openingCheckbox.addEventListener('change', (e) => {
-      const target = e.target as HTMLInputElement;
-      calculator.setIncludeOpening(target.checked);
+      const target = e.target;
+      globalCalculator.setIncludeOpening(target.checked);
       
       // Add smooth animation to checkbox
-      const customCheckbox = target.nextElementSibling as HTMLElement;
+      const customCheckbox = target.nextElementSibling;
       if (customCheckbox) {
         customCheckbox.style.transform = 'scale(1.1)';
         setTimeout(() => {
@@ -912,11 +864,11 @@ const hasValidAnime = anime && typeof anime.episodes === 'number' && anime.episo
     });
 
     endingCheckbox.addEventListener('change', (e) => {
-      const target = e.target as HTMLInputElement;
-      calculator.setIncludeEnding(target.checked);
+      const target = e.target;
+      globalCalculator.setIncludeEnding(target.checked);
       
       // Add smooth animation to checkbox
-      const customCheckbox = target.nextElementSibling as HTMLElement;
+      const customCheckbox = target.nextElementSibling;
       if (customCheckbox) {
         customCheckbox.style.transform = 'scale(1.1)';
         setTimeout(() => {
@@ -925,234 +877,39 @@ const hasValidAnime = anime && typeof anime.episodes === 'number' && anime.episo
       }
     });
 
-    // Initial calculation
-    calculator.recalculate();
-
     // Store calculator instance for external access
-    (calculatorElement as any).calculator = calculator;
-  });
-
-  // Function to update anime data from parent component
-  function updateAnimeData(animeData: any) {
-    const calculatorElement = document.querySelector('.time-calculator');
-    if (!calculatorElement) return;
-
-    // Update data attribute
-    calculatorElement.setAttribute('data-anime', animeData ? JSON.stringify(animeData) : '');
+    calculatorElement.calculator = globalCalculator;
     
-    // Re-render the component
-    renderTimeCalculator(calculatorElement, animeData);
-  }
-
-  function renderTimeCalculator(container: Element, animeData: any) {
-    const hasValidAnime = animeData && typeof animeData.episodes === 'number' && animeData.episodes > 0;
-    
-    let content = '';
-    
-    if (hasValidAnime) {
-      content = `
-        <div class="time-calculator__content animate-fade-in">
-          <div class="time-calculator__header">
-            <h3 class="time-calculator__title">Watch Time Calculator</h3>
-            <p class="time-calculator__subtitle">Customize your viewing experience</p>
-          </div>
-
-          <div class="time-calculator__controls">
-            <div class="time-calculator__checkbox-group">
-              <label class="time-calculator__checkbox-label">
-                <input
-                  type="checkbox"
-                  class="time-calculator__checkbox"
-                  id="include-opening"
-                  data-testid="include-opening"
-                />
-                <span class="time-calculator__checkbox-custom"></span>
-                <span class="time-calculator__checkbox-text">
-                  Watch Opening Themes
-                  <span class="time-calculator__checkbox-detail">(uncheck to skip and save 1m 30s per episode)</span>
-                </span>
-              </label>
-
-              <label class="time-calculator__checkbox-label">
-                <input
-                  type="checkbox"
-                  class="time-calculator__checkbox"
-                  id="include-ending"
-                  data-testid="include-ending"
-                />
-                <span class="time-calculator__checkbox-custom"></span>
-                <span class="time-calculator__checkbox-text">
-                  Watch Ending Themes
-                  <span class="time-calculator__checkbox-detail">(uncheck to skip and save 1m 30s per episode)</span>
-                </span>
-              </label>
-            </div>
-          </div>
-
-          <div class="time-calculator__result" data-testid="calculation-result">
-            <div class="time-calculator__result-header">
-              <span class="time-calculator__result-label">Total Watch Time</span>
-            </div>
-            <div class="time-calculator__result-value" id="total-time">
-              <span class="time-calculator__calculating">Calculating...</span>
-            </div>
-            <div class="time-calculator__result-breakdown" id="time-breakdown">
-              <!-- Breakdown will be populated by JavaScript -->
-            </div>
-          </div>
-        </div>
-      `;
-    } else {
-      content = `
-        <div class="time-calculator__empty">
-          <div class="time-calculator__empty-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="currentColor"/>
-            </svg>
-          </div>
-          <p class="time-calculator__empty-message">
-            Search for an anime to calculate watch time
-          </p>
-        </div>
-      `;
+    // Function to toggle between empty and content states
+    function toggleCalculatorState(hasData) {
+      const contentElement = document.getElementById('calculator-content');
+      const emptyElement = document.getElementById('calculator-empty');
+      
+      if (hasData) {
+        contentElement.style.display = 'block';
+        emptyElement.style.display = 'none';
+      } else {
+        contentElement.style.display = 'none';
+        emptyElement.style.display = 'flex';
+      }
     }
 
-    container.innerHTML = content;
-    
-    // Re-initialize calculator functionality if anime data is present
-    if (hasValidAnime) {
-      initializeCalculator(animeData);
-    }
+    // Make it globally accessible for updates from parent
+    window.updateTimeCalculatorData = function(animeData) {
+      if (globalCalculator) {
+        if (animeData && animeData.episodes > 0) {
+          globalCalculator.updateAnime(animeData);
+          toggleCalculatorState(true);
+        } else {
+          toggleCalculatorState(false);
+        }
+      }
+    };
+
+    // Initialize with empty state
+    toggleCalculatorState(false);
   }
 
-  function initializeCalculator(animeData: any) {
-    // Wait for DOM to be updated
-    setTimeout(() => {
-      const openingCheckbox = document.getElementById('include-opening') as HTMLInputElement;
-      const endingCheckbox = document.getElementById('include-ending') as HTMLInputElement;
-      const totalTimeElement = document.getElementById('total-time');
-      const breakdownElement = document.getElementById('time-breakdown');
-      const resultElement = document.querySelector('.time-calculator__result');
-
-      if (!openingCheckbox || !endingCheckbox || !totalTimeElement || !breakdownElement) return;
-
-      // Create time calculator instance
-      const calculator = createTimeCalculator({
-        episodes: animeData.episodes,
-        episodeDuration: animeData.duration || 24,
-        includeOpening: openingCheckbox.checked,
-        includeEnding: endingCheckbox.checked
-      });
-
-      // Update display function
-      function updateDisplay(result: any, options: any, error?: string) {
-        if (error) {
-          totalTimeElement.innerHTML = '<span class="time-calculator__error">Error calculating time</span>';
-          breakdownElement.classList.remove('visible');
-          return;
-        }
-
-        if (!result) {
-          totalTimeElement.innerHTML = '<span class="time-calculator__calculating">Calculating...</span>';
-          breakdownElement.classList.remove('visible');
-          return;
-        }
-
-        // Add updating animation
-        resultElement?.classList.add('updating');
-        
-        setTimeout(() => {
-          // Update total time
-          totalTimeElement.textContent = result.formattedTime;
-
-          // Update breakdown
-          const breakdown = result.breakdown;
-          let breakdownHTML = `
-            <div class="time-calculator__breakdown-item">
-              <span class="time-calculator__breakdown-label">Base Time (${breakdown.episodes} episodes × ${breakdown.episodeDuration} min)</span>
-              <span class="time-calculator__breakdown-value">${breakdown.baseTime}</span>
-            </div>`;
-          
-          if (!breakdown.includeOpening) {
-            breakdownHTML += `
-              <div class="time-calculator__breakdown-item">
-                <span class="time-calculator__breakdown-label">Time Saved by Skipping Openings (${breakdown.episodes} × 1m 30s)</span>
-                <span class="time-calculator__breakdown-value">-${breakdown.openingTime}</span>
-              </div>`;
-          }
-          
-          if (!breakdown.includeEnding) {
-            breakdownHTML += `
-              <div class="time-calculator__breakdown-item">
-                <span class="time-calculator__breakdown-label">Time Saved by Skipping Endings (${breakdown.episodes} × 1m 30s)</span>
-                <span class="time-calculator__breakdown-value">-${breakdown.endingTime}</span>
-              </div>`;
-          }
-          
-          breakdownHTML += `
-            <div class="time-calculator__breakdown-item">
-              <span class="time-calculator__breakdown-label">Total Watch Time</span>
-              <span class="time-calculator__breakdown-value">${result.formattedTime}</span>
-            </div>`;
-          
-          breakdownElement.innerHTML = breakdownHTML;
-
-          breakdownElement.classList.add('visible');
-          resultElement?.classList.remove('updating');
-        }, 150);
-      }
-
-      // Add change listener
-      if (calculator && typeof calculator === 'object' && 'addChangeListener' in calculator) {
-        (calculator as any).addChangeListener(updateDisplay);
-      }
-
-      // Handle checkbox changes
-      openingCheckbox.addEventListener('change', (e) => {
-        const target = e.target as HTMLInputElement;
-        if (calculator && typeof calculator === 'object' && 'setIncludeOpening' in calculator) {
-          (calculator as any).setIncludeOpening(target.checked);
-        }
-        
-        // Add smooth animation to checkbox
-        const customCheckbox = target.nextElementSibling as HTMLElement;
-        if (customCheckbox) {
-          customCheckbox.style.transform = 'scale(1.1)';
-          setTimeout(() => {
-            customCheckbox.style.transform = '';
-          }, 150);
-        }
-      });
-
-      endingCheckbox.addEventListener('change', (e) => {
-        const target = e.target as HTMLInputElement;
-        if (calculator && typeof calculator === 'object' && 'setIncludeEnding' in calculator) {
-          (calculator as any).setIncludeEnding(target.checked);
-        }
-        
-        // Add smooth animation to checkbox
-        const customCheckbox = target.nextElementSibling as HTMLElement;
-        if (customCheckbox) {
-          customCheckbox.style.transform = 'scale(1.1)';
-          setTimeout(() => {
-            customCheckbox.style.transform = '';
-          }, 150);
-        }
-      });
-
-      // Initial calculation
-      if (calculator && typeof calculator === 'object' && 'recalculate' in calculator) {
-        (calculator as any).recalculate();
-      }
-
-      // Store calculator instance for external access
-      const calculatorElement = document.querySelector('.time-calculator');
-      if (calculatorElement) {
-        (calculatorElement as any).calculator = calculator;
-      }
-    }, 50);
-  }
-
-  // Export for use by parent components
-  (window as any).updateTimeCalculator = updateAnimeData;
+  // Initialize when DOM is ready
+  document.addEventListener('DOMContentLoaded', initializeTimeCalculator);
 </script>

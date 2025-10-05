@@ -10,6 +10,7 @@ import '../styles/global.css';
 import AnimeSearch from '../components/AnimeSearch.astro';
 import AnimeDisplay from '../components/AnimeDisplay.astro';
 import TimeCalculator from '../components/TimeCalculator.astro';
+
 ---
 
 <html lang="en">
@@ -57,6 +58,7 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 					<section class="calculator-section" id="calculator-section">
 						<TimeCalculator />
 					</section>
+
 				</div>
 				
 				<!-- Search Section - Now Below -->
@@ -501,15 +503,21 @@ import TimeCalculator from '../components/TimeCalculator.astro';
 				}
 
 				updateTimeCalculator(anime) {
-					// Update the TimeCalculator component with new anime data
-					if (window.updateTimeCalculator) {
-						window.updateTimeCalculator(anime);
+					// Use the global function exposed by TimeCalculator component
+					if (window.updateTimeCalculatorData) {
+						window.updateTimeCalculatorData(anime);
 					}
 					
-					// Store data for component to access
-					const calculatorElement = this.calculatorSection?.querySelector('.time-calculator');
+					// Also store data for component to access (fallback)
+					const calculatorElement = document.querySelector('.time-calculator');
 					if (calculatorElement) {
 						calculatorElement.dataset.anime = anime ? JSON.stringify(anime) : '';
+						
+						// Try direct calculator access as fallback
+						const calculator = calculatorElement.calculator;
+						if (calculator && anime) {
+							calculator.updateAnime(anime);
+						}
 					}
 				}
 

@@ -152,11 +152,11 @@ export function calculateWatchTime(options) {
   const baseMinutes = episodes * finalEpisodeDuration;
 
   // Calculate time to subtract when NOT including opening and ending themes
-  const openingMinutes = includeOpening ? 0 : episodes * OPENING_THEME_DURATION;
-  const endingMinutes = includeEnding ? 0 : episodes * ENDING_THEME_DURATION;
+  const openingSubtraction = includeOpening ? 0 : episodes * OPENING_THEME_DURATION;
+  const endingSubtraction = includeEnding ? 0 : episodes * ENDING_THEME_DURATION;
 
   // Calculate total time (subtract OP/ED time when not including them)
-  const totalMinutes = baseMinutes - openingMinutes - endingMinutes;
+  const totalMinutes = baseMinutes - openingSubtraction - endingSubtraction;
 
   // Format the result
   const formattedTime = formatTime(totalMinutes);
@@ -166,16 +166,16 @@ export function calculateWatchTime(options) {
     episodes,
     episodeDuration: finalEpisodeDuration,
     baseTime: formatTime(baseMinutes),
-    openingTime: includeOpening ? null : formatTime(openingMinutes),
-    endingTime: includeEnding ? null : formatTime(endingMinutes),
+    openingTime: includeOpening ? null : formatTime(openingSubtraction),
+    endingTime: includeEnding ? null : formatTime(endingSubtraction),
     includeOpening,
     includeEnding
   };
 
   return {
     baseMinutes,
-    openingMinutes,
-    endingMinutes,
+    openingMinutes: openingSubtraction,
+    endingMinutes: endingSubtraction,
     totalMinutes,
     formattedTime,
     breakdown

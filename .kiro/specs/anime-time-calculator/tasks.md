@@ -88,6 +88,7 @@
 
 
 
+
   - Build checkbox controls for opening and ending inclusion
   - Implement real-time calculation updates on checkbox changes
   - Add smooth toggle animations with aquamarine accents
