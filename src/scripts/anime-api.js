@@ -37,7 +37,7 @@
 // AniList GraphQL API endpoint
 const ANILIST_API_URL = 'https://graphql.anilist.co';
 
-// GraphQL query for anime search
+// GraphQL query for anime search (single result)
 const ANIME_SEARCH_QUERY = `
   query ($search: String) {
     Media (search: $search, type: ANIME) {
@@ -55,6 +55,30 @@ const ANIME_SEARCH_QUERY = `
       duration
       status
       description
+    }
+  }
+`;
+
+// GraphQL query for anime search with multiple results
+const ANIME_SEARCH_MULTIPLE_QUERY = `
+  query ($search: String, $page: Int, $perPage: Int) {
+    Page (page: $page, perPage: $perPage) {
+      media (search: $search, type: ANIME) {
+        id
+        title {
+          romaji
+          english
+          native
+        }
+        coverImage {
+          large
+          medium
+        }
+        episodes
+        duration
+        status
+        description
+      }
     }
   }
 `;
@@ -176,6 +200,69 @@ async function makeGraphQLRequest(query, variables = {}) {
   }
 
   return data.data;
+}
+
+/**
+ * Searches for multiple anime by title
+ * @param {string} searchTerm - Anime title to search for
+ * @param {number} limit - Maximum number of results to return (default: 10)
+ * @returns {Promise<{data: AnimeData[]|null, error: string|null}>} Promise resolving to anime array or error
+ */
+export async function searchMultipleAnime(searchTerm, limit = 10) {
+  try {
+    // Input validation
+    if (!searchTerm || typeof searchTerm !== 'string' || searchTerm.trim().length === 0) {
+      return { data: null, error: 'Please enter an anime title to search.' };
+    }
+
+    const trimmedSearch = searchTerm.trim();
+    if (trimmedSearch.length < 2) {
+      return { data: null, error: 'Please enter at least 2 characters to search.' };
+    }
+
+    const data = await makeGraphQLRequest(ANIME_SEARCH_MULTIPLE_QUERY, { 
+      search: trimmedSearch,
+      page: 1,
+      perPage: limit
+    });
+    
+    if (!data.Page || !data.Page.media || data.Page.media.length === 0) {
+      return { 
+        data: null, 
+        error: `No anime found for "${trimmedSearch}". Try a different title or check your spelling.` 
+      };
+    }
+
+    // Validate and normalize all results
+    const validatedResults = data.Page.media
+      .map(anime => validateAndNormalizeAnimeData({ Media: anime }))
+      .filter(anime => anime !== null);
+
+    if (validatedResults.length === 0) {
+      return { 
+        data: null, 
+        error: `No valid anime found for "${trimmedSearch}". Try a different title.` 
+      };
+    }
+
+    return { data: validatedResults, error: null };
+    
+  } catch (error) {
+    console.error('Multiple anime search error:', error);
+    
+    // Provide user-friendly error messages
+    let userMessage = 'An error occurred while searching. Please try again.';
+    
+    if (error.message.includes('Rate limit')) {
+      userMessage = 'Too many requests. Please wait a moment and try again.';
+    } else if (error.message.includes('temporarily unavailable')) {
+      userMessage = 'The anime database is temporarily unavailable. Please try again later.';
+    } else if (error.message.includes('Network error') || error.name === 'TypeError') {
+      userMessage = 'Network connection error. Please check your internet connection and try again.';
+    }
+    
+    return { data: null, error: userMessage };
+  }
 }
 
 /**

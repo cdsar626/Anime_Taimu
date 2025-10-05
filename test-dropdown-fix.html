@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dropdown Fix Test</title>
+    <style>
+        /* Import the global CSS variables */
+        :root {
+            --primary-aqua: #00CED1;
+            --primary-aqua-light: #48D1CC;
+            --primary-aqua-dark: #008B8B;
+            --surface: #FFFFFF;
+            --surface-elevated: #feffff;
+            --text-primary: #0f2027;
+            --text-secondary: #2c5f5f;
+            --text-inverse: #FFFFFF;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --font-size-2xl: 1.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-2xl: 1.5rem;
+            --radius-full: 9999px;
+            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+            --line-height-tight: 1.25;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #f8fdfd;
+            color: var(--text-primary);
+            padding: 2rem;
+            margin: 0;
+        }
+
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: var(--radius-xl);
+            box-shadow: 0 8px 16px rgba(64, 224, 208, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-aqua-dark);
+            margin-bottom: 2rem;
+        }
+
+        /* Test both plain items and styled items */
+        .plain-item {
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+        }
+
+        /* Enhanced Alternative Results Styles - Premium Aquamarine Theme */
+        .alternatives-list {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: var(--space-sm);
+        }
+
+        .alternative-item {
+            display: flex;
+            align-items: stretch;
+            gap: 0;
+            padding: 0;
+            margin-bottom: var(--space-md);
+            border-radius: var(--radius-xl);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            position: relative;
+            background: linear-gradient(135deg, 
+                rgba(0, 206, 209, 0.08) 0%, 
+                rgba(72, 209, 204, 0.05) 50%,
+                rgba(127, 255, 212, 0.03) 100%
+            );
+            border: 2px solid rgba(0, 206, 209, 0.15);
+            box-shadow: 
+                0 8px 24px rgba(0, 206, 209, 0.12), 
+                0 4px 12px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            min-height: 140px;
+        }
+
+        .alternative-item:hover {
+            background: linear-gradient(135deg, 
+                rgba(0, 206, 209, 0.15) 0%, 
+                rgba(72, 209, 204, 0.10) 50%,
+                rgba(127, 255, 212, 0.06) 100%
+            );
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 
+                0 20px 40px rgba(0, 206, 209, 0.25), 
+                0 10px 20px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border-color: rgba(0, 206, 209, 0.3);
+        }
+
+        .alternative-cover-container {
+            position: relative;
+            width: 100px;
+            flex-shrink: 0;
+            border-radius: var(--radius-xl) 0 0 var(--radius-xl);
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--primary-aqua-light), var(--primary-aqua));
+            transition: all var(--transition-normal);
+        }
+
+        .alternative-cover {
+            width: 100%;
+            height: 100%;
+            min-height: 140px;
+            object-fit: cover;
+            display: block;
+            transition: all var(--transition-normal);
+        }
+
+        .alternative-info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: var(--space-lg);
+            gap: var(--space-md);
+        }
+
+        .alternative-title {
+            font-size: var(--font-size-xl);
+            font-weight: 800;
+            color: var(--text-primary);
+            margin: 0;
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(0, 206, 209, 0.2);
+            letter-spacing: -0.02em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            transition: all var(--transition-fast);
+        }
+
+        .alternative-details {
+            display: flex;
+            align-items: center;
+            gap: var(--space-lg);
+            flex-wrap: wrap;
+        }
+
+        .alternative-episodes,
+        .alternative-duration {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-md);
+            background: linear-gradient(135deg, 
+                rgba(0, 206, 209, 0.15), 
+                rgba(72, 209, 204, 0.10)
+            );
+            border: 2px solid rgba(0, 206, 209, 0.2);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            color: var(--text-primary);
+            box-shadow: 
+                0 4px 12px rgba(0, 206, 209, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transition: all var(--transition-normal);
+        }
+
+        .alternative-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.9;
+            transition: all var(--transition-fast);
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Dropdown Styling Test</h1>
+        
+        <h2>Plain Items (should look basic)</h2>
+        <div class="plain-item">Plain Item 1</div>
+        <div class="plain-item">Plain Item 2</div>
+        
+        <h2>Styled Items (should look premium)</h2>
+        <div class="alternatives-list">
+            <div class="alternative-item">
+                <div class="alternative-cover-container">
+                    <img 
+                        class="alternative-cover" 
+                        src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx16498-73IhOXpJZiMF.jpg" 
+                        alt="Attack on Titan cover"
+                    />
+                </div>
+                <div class="alternative-info">
+                    <h4 class="alternative-title">Attack on Titan</h4>
+                    <div class="alternative-details">
+                        <div class="alternative-episodes">
+                            <svg class="alternative-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                            <span>25 episodes</span>
+                        </div>
+                        <div class="alternative-duration">
+                            <svg class="alternative-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12,6 12,12 16,14"></polyline>
+                            </svg>
+                            <span>24min</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alternative-item">
+                <div class="alternative-cover-container">
+                    <img 
+                        class="alternative-cover" 
+                        src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx20605-fPhvy69vnQqS.jpg" 
+                        alt="Tokyo Ghoul cover"
+                    />
+                </div>
+                <div class="alternative-info">
+                    <h4 class="alternative-title">Tokyo Ghoul</h4>
+                    <div class="alternative-details">
+                        <div class="alternative-episodes">
+                            <svg class="alternative-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                            <span>12 episodes</span>
+                        </div>
+                        <div class="alternative-duration">
+                            <svg class="alternative-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12,6 12,12 16,14"></polyline>
+                            </svg>
+                            <span>24min</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>Dynamically Created Items (test JavaScript creation)</h2>
+        <div id="dynamic-container"></div>
+        
+        <button onclick="createDynamicItems()">Create Dynamic Items</button>
+    </div>
+
+    <script>
+        function createDynamicItems() {
+            const container = document.getElementById('dynamic-container');
+            container.innerHTML = '';
+            
+            // Create items using the same structure as the AnimeSearch component
+            const items = [
+                {
+                    title: 'Demon Slayer',
+                    episodes: 26,
+                    duration: 23,
+                    cover: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx101922-PEn1CTc93blC.jpg'
+                },
+                {
+                    title: 'One Piece',
+                    episodes: 1000,
+                    duration: 24,
+                    cover: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx21-YCDoj1EkAxFn.jpg'
+                }
+            ];
+            
+            items.forEach(anime => {
+                const item = document.createElement('div');
+                item.className = 'alternative-item';
+                
+                item.innerHTML = `
+                    <div class="alternative-cover-container">
+                        <img 
+                            class="alternative-cover" 
+                            src="${anime.cover}" 
+                            alt="${anime.title} cover"
+                        />
+                    </div>
+                    <div class="alternative-info">
+                        <h4 class="alternative-title">${anime.title}</h4>
+                        <div class="alternative-details">
+                            <div class="alternative-episodes">
+                                <svg class="alternative-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                                </svg>
+                                <span>${anime.episodes} episodes</span>
+                            </div>
+                            <div class="alternative-duration">
+                                <svg class="alternative-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12,6 12,12 16,14"></polyline>
+                                </svg>
+                                <span>${anime.duration}min</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(item);
+            });
+        }
+    </script>
+</body>
+</html>

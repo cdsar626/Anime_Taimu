@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Styles Diagnostic Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .test-item {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .working {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        
+        .missing {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <h1>CSS Classes Diagnostic</h1>
+    
+    <div class="test-container">
+        <h2>Testing CSS Classes</h2>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        // Test if CSS classes exist by checking computed styles
+        function testCSSClass(className, expectedProperty, expectedValue) {
+            // Create a test element
+            const testEl = document.createElement('div');
+            testEl.className = className;
+            testEl.style.position = 'absolute';
+            testEl.style.left = '-9999px';
+            document.body.appendChild(testEl);
+            
+            // Get computed style
+            const computedStyle = window.getComputedStyle(testEl);
+            const actualValue = computedStyle.getPropertyValue(expectedProperty);
+            
+            // Clean up
+            document.body.removeChild(testEl);
+            
+            return actualValue !== '' && actualValue !== 'auto' && actualValue !== 'normal';
+        }
+        
+        const results = document.getElementById('results');
+        
+        // Test classes
+        const tests = [
+            { class: 'alternatives-list', property: 'max-height', description: 'alternatives-list max-height' },
+            { class: 'alternative-item', property: 'display', description: 'alternative-item display' },
+            { class: 'alternative-cover-container', property: 'position', description: 'alternative-cover-container position' },
+            { class: 'alternative-cover', property: 'width', description: 'alternative-cover width' },
+            { class: 'alternative-title', property: 'font-weight', description: 'alternative-title font-weight' },
+            { class: 'alternative-episodes', property: 'display', description: 'alternative-episodes display' }
+        ];
+        
+        tests.forEach(test => {
+            const exists = testCSSClass(test.class, test.property);
+            const resultEl = document.createElement('div');
+            resultEl.className = exists ? 'test-item working' : 'test-item missing';
+            resultEl.textContent = `${test.description}: ${exists ? '✅ FOUND' : '❌ MISSING'}`;
+            results.appendChild(resultEl);
+        });
+        
+        // Also test if we can create the actual structure
+        const testStructure = document.createElement('div');
+        testStructure.innerHTML = `
+            <div class="alternatives-list">
+                <div class="alternative-item">
+                    <div class="alternative-cover-container">
+                        <div class="alternative-cover"></div>
+                    </div>
+                    <div class="alternative-info">
+                        <div class="alternative-title">Test Title</div>
+                        <div class="alternative-episodes">Test Episodes</div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        const structureResult = document.createElement('div');
+        structureResult.className = 'test-item working';
+        structureResult.textContent = '✅ HTML Structure can be created';
+        results.appendChild(structureResult);
+        
+        // Add note about browser cache
+        const note = document.createElement('div');
+        note.className = 'test-item';
+        note.style.background = '#fff3cd';
+        note.style.borderColor = '#ffeaa7';
+        note.style.color = '#856404';
+        note.innerHTML = `
+            <strong>Note:</strong> If classes show as MISSING, try:
+            <ul>
+                <li>Hard refresh (Ctrl+F5 or Cmd+Shift+R)</li>
+                <li>Clear browser cache</li>
+                <li>Check browser developer tools for CSS errors</li>
+                <li>Verify the Astro component is being compiled correctly</li>
+            </ul>
+        `;
+        results.appendChild(note);
+    </script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Dropdown Test</title>
+    <link rel="stylesheet" href="src/styles/global.css">
+    <style>
+        body {
+            padding: 2rem;
+            background: var(--background, #f8fdfd);
+        }
+        
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--surface, white);
+            padding: 2rem;
+            border-radius: var(--radius-xl, 1rem);
+            box-shadow: 0 8px 16px rgba(64, 224, 208, 0.1);
+        }
+        
+        .dropdown-container {
+            border: 2px solid var(--primary-aqua-light, #48D1CC);
+            border-radius: var(--radius-xl, 1rem);
+            background: var(--surface-elevated, #feffff);
+            padding: var(--space-sm, 0.5rem);
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Dropdown Styling Test - Compact Size</h1>
+        <p>This test uses the global CSS styles with smaller, more compact dropdown items.</p>
+        
+        <div class="dropdown-container">
+            <div class="alternatives-list" id="alternatives-list">
+                <!-- Items will be added here dynamically -->
+            </div>
+        </div>
+        
+        <button onclick="addItems()" style="margin-top: 1rem; padding: 0.5rem 1rem;">Add Dropdown Items</button>
+        <button onclick="clearItems()" style="margin-top: 1rem; padding: 0.5rem 1rem;">Clear Items</button>
+    </div>
+
+    <script>
+        function addItems() {
+            const container = document.getElementById('alternatives-list');
+            
+            const animeData = [
+                {
+                    title: 'Attack on Titan',
+                    episodes: 25,
+                    duration: 24,
+                    cover: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx16498-73IhOXpJZiMF.jpg'
+                },
+                {
+                    title: 'Tokyo Ghoul',
+                    episodes: 12,
+                    duration: 24,
+                    cover: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx20605-fPhvy69vnQqS.jpg'
+                },
+                {
+                    title: 'Demon Slayer',
+                    episodes: 26,
+                    duration: 23,
+                    cover: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx101922-PEn1CTc93blC.jpg'
+                }
+            ];
+            
+            container.innerHTML = '';
+            
+            animeData.forEach(anime => {
+                const item = document.createElement('div');
+                item.className = 'alternative-item';
+                item.setAttribute('role', 'button');
+                item.setAttribute('tabindex', '0');
+                
+                item.innerHTML = `
+                    <div class="alternative-cover-container">
+                        <img 
+                            class="alternative-cover" 
+                            src="${anime.cover}" 
+                            alt="${anime.title} cover"
+                            loading="lazy"
+                            onload="this.classList.add('loaded')"
+                        />
+                        <div class="alternative-cover-overlay"></div>
+                        <div class="alternative-cover-glow"></div>
+                    </div>
+                    <div class="alternative-info">
+                        <h4 class="alternative-title">${anime.title}</h4>
+                        <div class="alternative-details">
+                            <div class="alternative-episodes">
+                                <svg class="alternative-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                                </svg>
+                                <span>${anime.episodes} episodes</span>
+                            </div>
+                            <div class="alternative-duration">
+                                <svg class="alternative-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12,6 12,12 16,14"></polyline>
+                                </svg>
+                                <span>${anime.duration}min</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Add click handler
+                item.addEventListener('click', () => {
+                    alert(`Selected: ${anime.title}`);
+                });
+                
+                container.appendChild(item);
+            });
+        }
+        
+        function clearItems() {
+            document.getElementById('alternatives-list').innerHTML = '';
+        }
+        
+        // Add items on page load
+        document.addEventListener('DOMContentLoaded', addItems);
+    </script>
+</body>
+</html>

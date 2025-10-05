@@ -3,7 +3,7 @@
  * Extracted for testing purposes - contains the core logic without Astro dependencies
  */
 
-import { searchAnime, cancelPendingSearch } from '../scripts/anime-api.js';
+import { searchAnime, searchMultipleAnime, cancelPendingSearch } from '../scripts/anime-api.js';
 
 export class AnimeSearchComponent {
   constructor() {
@@ -13,8 +13,16 @@ export class AnimeSearchComponent {
     this.searchError = document.getElementById('search-error');
     this.retryButton = document.querySelector('.retry-button');
     
+    // Alternative results elements
+    this.alternativeResults = document.getElementById('alternative-results');
+    this.showAlternativesBtn = document.getElementById('show-alternatives-btn');
+    this.alternativesDropdown = document.getElementById('alternatives-dropdown');
+    this.alternativesList = document.getElementById('alternatives-list');
+    
     this.currentSearchTerm = '';
     this.isLoading = false;
+    this.alternativesExpanded = false;
+    this.currentAlternatives = [];
     
     this.init();
   }
@@ -27,6 +35,7 @@ export class AnimeSearchComponent {
     this.searchInput.addEventListener('keydown', this.handleKeydown.bind(this));
     this.clearButton?.addEventListener('click', this.handleClear.bind(this));
     this.retryButton?.addEventListener('click', this.handleRetry.bind(this));
+    this.showAlternativesBtn?.addEventListener('click', this.handleToggleAlternatives.bind(this));
 
     // Handle browser back/forward navigation
     window.addEventListener('popstate', this.handlePopState.bind(this));
@@ -59,6 +68,7 @@ export class AnimeSearchComponent {
     this.searchInput.focus();
     this.updateClearButtonVisibility('');
     this.hideStates();
+    this.hideAlternatives();
     this.dispatchSearchEvent(null, null);
     cancelPendingSearch();
     
@@ -74,6 +84,20 @@ export class AnimeSearchComponent {
 
   handlePopState() {
     this.initializeFromURL();
+  }
+
+  handleToggleAlternatives() {
+    if (this.alternativesExpanded) {
+      this.hideAlternativesDropdown();
+    } else {
+      this.showAlternativesDropdown();
+    }
+  }
+
+  handleAlternativeSelect(anime) {
+    // Hide alternatives and dispatch the selected anime
+    this.hideAlternatives();
+    this.dispatchSearchEvent(anime, null);
   }
 
   initializeFromURL() {
@@ -131,12 +155,16 @@ export class AnimeSearchComponent {
 
       if (result.error) {
         this.showError(result.error);
+        this.hideAlternatives();
         this.dispatchSearchEvent(null, result.error);
       } else if (result.data) {
         this.hideStates();
         this.dispatchSearchEvent(result.data, null);
+        // Load alternatives for this search
+        this.loadAlternatives(this.currentSearchTerm);
       } else {
         this.showError('No anime found. Please try a different search term.');
+        this.hideAlternatives();
         this.dispatchSearchEvent(null, 'No results found');
       }
     } catch (error) {
@@ -194,6 +222,126 @@ export class AnimeSearchComponent {
     this.hideError();
   }
 
+  async loadAlternatives(searchTerm) {
+    try {
+      const result = await searchMultipleAnime(searchTerm, 8); // Get up to 8 alternatives
+      
+      if (result.data && result.data.length > 1) {
+        // Remove the first result (it's the one already shown) and store alternatives
+        this.currentAlternatives = result.data.slice(1);
+        this.showAlternatives();
+      } else {
+        this.hideAlternatives();
+      }
+    } catch (error) {
+      console.error('Failed to load alternatives:', error);
+      this.hideAlternatives();
+    }
+  }
+
+  showAlternatives() {
+    if (this.alternativeResults && this.currentAlternatives.length > 0) {
+      this.alternativeResults.style.display = 'block';
+      this.populateAlternativesList();
+    }
+  }
+
+  hideAlternatives() {
+    if (this.alternativeResults) {
+      this.alternativeResults.style.display = 'none';
+    }
+    this.hideAlternativesDropdown();
+    this.currentAlternatives = [];
+  }
+
+  showAlternativesDropdown() {
+    if (this.alternativesDropdown && this.showAlternativesBtn) {
+      this.alternativesDropdown.style.display = 'block';
+      this.showAlternativesBtn.classList.add('expanded');
+      this.alternativesExpanded = true;
+    }
+  }
+
+  hideAlternativesDropdown() {
+    if (this.alternativesDropdown && this.showAlternativesBtn) {
+      this.alternativesDropdown.style.display = 'none';
+      this.showAlternativesBtn.classList.remove('expanded');
+      this.alternativesExpanded = false;
+    }
+  }
+
+  populateAlternativesList() {
+    if (!this.alternativesList) return;
+
+    this.alternativesList.innerHTML = '';
+
+    this.currentAlternatives.forEach(anime => {
+      const item = this.createAlternativeItem(anime);
+      this.alternativesList.appendChild(item);
+    });
+  }
+
+  createAlternativeItem(anime) {
+    const item = document.createElement('div');
+    item.className = 'alternative-item';
+    item.setAttribute('role', 'button');
+    item.setAttribute('tabindex', '0');
+    item.setAttribute('aria-label', `Select ${anime.title.romaji || anime.title.english}`);
+
+    const displayTitle = anime.title.english || anime.title.romaji;
+    const episodes = anime.episodes || 'Unknown';
+    const duration = anime.duration || 24;
+
+    item.innerHTML = `
+      <div class="alternative-cover-container">
+        <img 
+          class="alternative-cover" 
+          src="${anime.coverImage.medium || anime.coverImage.large || '/placeholder-anime.jpg'}" 
+          alt="${displayTitle} cover"
+          loading="lazy"
+          onload="this.classList.add('loaded')"
+        />
+        <div class="alternative-cover-overlay"></div>
+        <div class="alternative-cover-glow"></div>
+      </div>
+      <div class="alternative-info">
+        <h4 class="alternative-title">${displayTitle}</h4>
+        <div class="alternative-details">
+          <div class="alternative-episodes">
+            <svg class="alternative-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+            <span>${episodes} episodes</span>
+          </div>
+          <div class="alternative-duration">
+            <svg class="alternative-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12,6 12,12 16,14"></polyline>
+            </svg>
+            <span>${duration}min</span>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Add click handler
+    item.addEventListener('click', () => {
+      this.handleAlternativeSelect(anime);
+    });
+
+    // Add keyboard handler
+    item.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        this.handleAlternativeSelect(anime);
+      }
+    });
+
+    return item;
+  }
+
   dispatchSearchEvent(animeData, error) {
     // Dispatch custom event for parent components to listen to
     const event = new CustomEvent('animeSearchResult', {
@@ -238,6 +386,11 @@ export class AnimeSearchComponent {
 
   clear() {
     this.handleClear();
+  }
+
+  // Public method to get current alternatives
+  getAlternatives() {
+    return this.currentAlternatives;
   }
 
   getLoadingState() {

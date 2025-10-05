@@ -60,6 +60,25 @@
       </button>
     </div>
   </div>
+
+  <!-- Alternative Results Section -->
+  <div class="alternative-results" id="alternative-results" style="display: none;">
+    <div class="alternative-header">
+      <span class="alternative-text">Not the right anime?</span>
+      <button type="button" class="show-alternatives-btn" id="show-alternatives-btn">
+        <span class="btn-text">Show more results</span>
+        <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6,9 12,15 18,9"></polyline>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="alternatives-dropdown" id="alternatives-dropdown" style="display: none;">
+      <div class="alternatives-list" id="alternatives-list">
+        <!-- Alternative anime results will be populated here -->
+      </div>
+    </div>
+  </div>
 </div>
 
 <style>
@@ -286,16 +305,7 @@
     }
   }
 
-  /* Reduced Motion */
-  @media (prefers-reduced-motion: reduce) {
-    .loading-spinner {
-      animation: none;
-    }
-
-    .search-input {
-      transition: none;
-    }
-  }
+  /* Alternative results styles are now in global.css for better compatibility with dynamic content */
 </style>
 
 <script>
