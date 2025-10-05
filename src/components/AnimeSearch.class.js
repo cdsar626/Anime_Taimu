@@ -15,7 +15,7 @@ export class AnimeSearchComponent {
     
     // Alternative results elements
     this.alternativeResults = document.getElementById('alternative-results');
-    this.showAlternativesBtn = document.getElementById('show-alternatives-btn');
+    this.alternativesHintBtn = document.getElementById('alternatives-hint-btn');
     this.alternativesDropdown = document.getElementById('alternatives-dropdown');
     this.alternativesList = document.getElementById('alternatives-list');
     
@@ -35,7 +35,7 @@ export class AnimeSearchComponent {
     this.searchInput.addEventListener('keydown', this.handleKeydown.bind(this));
     this.clearButton?.addEventListener('click', this.handleClear.bind(this));
     this.retryButton?.addEventListener('click', this.handleRetry.bind(this));
-    this.showAlternativesBtn?.addEventListener('click', this.handleToggleAlternatives.bind(this));
+    this.alternativesHintBtn?.addEventListener('click', this.handleToggleAlternatives.bind(this));
 
     // Handle browser back/forward navigation
     window.addEventListener('popstate', this.handlePopState.bind(this));
@@ -240,13 +240,25 @@ export class AnimeSearchComponent {
   }
 
   showAlternatives() {
-    if (this.alternativeResults && this.currentAlternatives.length > 0) {
-      this.alternativeResults.style.display = 'block';
+    if (this.currentAlternatives.length > 0) {
+      // Show the hint button in the search bar
+      if (this.alternativesHintBtn) {
+        this.alternativesHintBtn.style.display = 'flex';
+      }
+      // Prepare the alternatives section (but keep dropdown hidden initially)
+      if (this.alternativeResults) {
+        this.alternativeResults.style.display = 'block';
+      }
       this.populateAlternativesList();
     }
   }
 
   hideAlternatives() {
+    // Hide the hint button
+    if (this.alternativesHintBtn) {
+      this.alternativesHintBtn.style.display = 'none';
+    }
+    // Hide the alternatives section
     if (this.alternativeResults) {
       this.alternativeResults.style.display = 'none';
     }
@@ -255,17 +267,17 @@ export class AnimeSearchComponent {
   }
 
   showAlternativesDropdown() {
-    if (this.alternativesDropdown && this.showAlternativesBtn) {
+    if (this.alternativesDropdown && this.alternativesHintBtn) {
       this.alternativesDropdown.style.display = 'block';
-      this.showAlternativesBtn.classList.add('expanded');
+      this.alternativesHintBtn.classList.add('expanded');
       this.alternativesExpanded = true;
     }
   }
 
   hideAlternativesDropdown() {
-    if (this.alternativesDropdown && this.showAlternativesBtn) {
+    if (this.alternativesDropdown && this.alternativesHintBtn) {
       this.alternativesDropdown.style.display = 'none';
-      this.showAlternativesBtn.classList.remove('expanded');
+      this.alternativesHintBtn.classList.remove('expanded');
       this.alternativesExpanded = false;
     }
   }

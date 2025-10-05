@@ -24,6 +24,21 @@
           <path d="m21 21-4.35-4.35"></path>
         </svg>
       </div>
+      <!-- Alternatives hint button inside search bar -->
+      <button 
+        type="button" 
+        class="alternatives-hint-btn" 
+        id="alternatives-hint-btn"
+        aria-label="Show more anime results"
+        style="display: none;"
+        title="Not the right anime? Click to see more options"
+      >
+        <span class="hint-text">More options</span>
+        <svg class="hint-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6,9 12,15 18,9"></polyline>
+        </svg>
+      </button>
+      
       <button 
         type="button" 
         class="clear-button" 
@@ -61,18 +76,8 @@
     </div>
   </div>
 
-  <!-- Alternative Results Section -->
+  <!-- Alternative Results Section - Simplified -->
   <div class="alternative-results" id="alternative-results" style="display: none;">
-    <div class="alternative-header">
-      <span class="alternative-text">Not the right anime?</span>
-      <button type="button" class="show-alternatives-btn" id="show-alternatives-btn">
-        <span class="btn-text">Show more results</span>
-        <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="6,9 12,15 18,9"></polyline>
-        </svg>
-      </button>
-    </div>
-    
     <div class="alternatives-dropdown" id="alternatives-dropdown" style="display: none;">
       <div class="alternatives-list" id="alternatives-list">
         <!-- Alternative anime results will be populated here -->
@@ -153,7 +158,7 @@
 
   .clear-button {
     position: absolute;
-    right: 1.25rem;
+    right: 0.5rem;
     background: none;
     border: none;
     color: var(--text-secondary);
@@ -164,6 +169,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 11;
   }
   
   .clear-button svg {
@@ -185,6 +191,60 @@
   .clear-button:focus {
     outline: 2px solid var(--primary-aqua);
     outline-offset: 2px;
+  }
+
+  /* Alternatives hint button inside search bar */
+  .alternatives-hint-btn {
+    position: absolute;
+    right: 3.5rem;
+    background: none;
+    border: none;
+    color: var(--primary-aqua-dark);
+    cursor: pointer;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+    opacity: 0.8;
+    z-index: 10;
+  }
+
+  .alternatives-hint-btn:hover {
+    background: rgba(0, 206, 209, 0.1);
+    opacity: 1;
+    transform: scale(1.05);
+  }
+
+  .alternatives-hint-btn:active {
+    transform: scale(0.98);
+  }
+
+  .alternatives-hint-btn:focus {
+    outline: 2px solid var(--primary-aqua);
+    outline-offset: 2px;
+  }
+
+  .hint-text {
+    font-size: var(--font-size-xs);
+    white-space: nowrap;
+  }
+
+  .hint-chevron {
+    transition: transform var(--transition-normal);
+    opacity: 0.7;
+  }
+
+  .alternatives-hint-btn.expanded .hint-chevron {
+    transform: rotate(180deg);
+  }
+
+  .alternatives-hint-btn.expanded {
+    background: rgba(0, 206, 209, 0.15);
+    color: var(--primary-aqua);
   }
 
   /* Loading State Styles */
@@ -279,7 +339,16 @@
     }
 
     .clear-button {
-      right: 0.75rem;
+      right: 0.5rem;
+    }
+
+    .alternatives-hint-btn {
+      right: 2.5rem;
+      font-size: var(--font-size-xs);
+    }
+
+    .hint-text {
+      display: none; /* Hide text on mobile, show only icon */
     }
 
     .error-content {

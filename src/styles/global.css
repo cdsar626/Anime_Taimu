@@ -935,143 +935,16 @@ p {
   animation: slideDown var(--transition-slow) ease-out;
 }
 
-.alternative-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--space-lg);
-  background: linear-gradient(135deg, 
-    rgba(64, 224, 208, 0.12), 
-    rgba(127, 255, 212, 0.08),
-    rgba(64, 224, 208, 0.06)
-  );
-  border: 3px solid var(--primary-aqua-light);
-  border-radius: var(--radius-xl);
-  position: relative;
-  overflow: hidden;
-  box-shadow: 
-    0 8px 16px rgba(64, 224, 208, 0.15),
-    0 4px 8px rgba(64, 224, 208, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-}
-
-.alternative-header::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, 
-    transparent, 
-    rgba(64, 224, 208, 0.1), 
-    transparent
-  );
-  animation: shimmer 3s ease-in-out infinite;
-}
-
-.alternative-header:hover {
-  border-color: var(--primary-aqua);
-  box-shadow: 
-    0 12px 24px rgba(64, 224, 208, 0.2),
-    0 6px 12px rgba(64, 224, 208, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  transform: translateY(-2px);
-}
-
-.alternative-text {
-  color: var(--text-primary);
-  font-weight: 600;
-  font-size: var(--font-size-base);
-  text-shadow: 0 1px 2px rgba(0, 206, 209, 0.1);
-  position: relative;
-  z-index: 1;
-}
-
-.show-alternatives-btn {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  background: linear-gradient(135deg, 
-    rgba(64, 224, 208, 0.1), 
-    rgba(127, 255, 212, 0.05)
-  );
-  border: 2px solid var(--primary-aqua-light);
-  color: var(--primary-aqua-dark);
-  font-weight: 600;
-  font-size: var(--font-size-sm);
-  cursor: pointer;
-  padding: var(--space-sm) var(--space-lg);
-  border-radius: var(--radius-lg);
-  transition: all var(--transition-normal);
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(64, 224, 208, 0.1);
-  z-index: 1;
-}
-
-.show-alternatives-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, 
-    transparent, 
-    rgba(255, 255, 255, 0.2), 
-    transparent
-  );
-  transition: left var(--transition-slow);
-}
-
-.show-alternatives-btn:hover::before {
-  left: 100%;
-}
-
-.show-alternatives-btn:hover {
-  background: linear-gradient(135deg, 
-    var(--primary-aqua-light), 
-    var(--primary-aqua)
-  );
-  color: var(--text-inverse);
-  border-color: var(--primary-aqua);
-  transform: translateY(-2px);
-  box-shadow: 
-    0 8px 16px rgba(64, 224, 208, 0.25),
-    0 4px 8px rgba(64, 224, 208, 0.15);
-}
-
-.show-alternatives-btn:active {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(64, 224, 208, 0.2);
-}
-
-.show-alternatives-btn:focus {
-  outline: none;
-  box-shadow: 
-    0 0 0 3px rgba(64, 224, 208, 0.3),
-    0 8px 16px rgba(64, 224, 208, 0.2);
-}
-
-.chevron-icon {
-  transition: transform var(--transition-normal);
-  filter: drop-shadow(0 1px 2px rgba(0, 206, 209, 0.2));
-}
-
-.show-alternatives-btn.expanded .chevron-icon {
-  transform: rotate(180deg);
-}
+/* Old alternative header styles removed - now using in-search-bar hint */
 
 .alternatives-dropdown {
-  margin-top: var(--space-md);
-  border: 3px solid var(--primary-aqua-light);
-  border-radius: var(--radius-xl);
+  margin-top: var(--space-sm);
+  border: 2px solid var(--primary-aqua-light);
+  border-radius: var(--radius-lg);
   background: var(--surface-elevated);
   box-shadow: 
-    0 20px 40px rgba(64, 224, 208, 0.15),
-    0 10px 20px rgba(64, 224, 208, 0.1),
+    0 12px 24px rgba(64, 224, 208, 0.12),
+    0 6px 12px rgba(64, 224, 208, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   overflow: hidden;
   animation: dropdownSlide var(--transition-slow) cubic-bezier(0.4, 0, 0.2, 1);
@@ -1426,24 +1299,7 @@ p {
     margin-top: var(--space-md);
   }
 
-  .alternative-header {
-    flex-direction: column;
-    gap: var(--space-md);
-    align-items: stretch;
-    padding: var(--space-md);
-  }
-
-  .alternative-text {
-    text-align: center;
-    font-size: var(--font-size-sm);
-  }
-
-  .show-alternatives-btn {
-    align-self: stretch;
-    justify-content: center;
-    padding: var(--space-md) var(--space-lg);
-    font-size: var(--font-size-base);
-  }
+  /* Old header styles removed - using in-search-bar hint now */
 
   .alternatives-dropdown {
     margin-top: var(--space-sm);
