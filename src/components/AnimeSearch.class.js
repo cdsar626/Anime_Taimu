@@ -95,8 +95,8 @@ export class AnimeSearchComponent {
   }
 
   handleAlternativeSelect(anime) {
-    // Hide alternatives and dispatch the selected anime
-    this.hideAlternatives();
+    // Hide dropdown but keep alternatives section visible so user can reopen it
+    this.hideAlternativesDropdown();
     this.dispatchSearchEvent(anime, null);
   }
 
